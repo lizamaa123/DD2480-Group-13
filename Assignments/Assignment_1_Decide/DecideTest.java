@@ -1,5 +1,43 @@
 package Assignment_1_Decide;
 
-public class DecideTest {
-    
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+class DecideTest {
+
+    @BeforeEach                                         
+    void setUp() {
+        // Reset parameters before every test to ensure clean state
+        Decide.PARAMETERS = new Decide.ParametersT();
+    }
+
+    // LIC 1 TEST
+
+    @Test
+    @DisplayName("LIC 1 should be true when radius is greater than RADIUS1")
+    void testLic1Positive() {
+        // Setting up new test parameters
+        Decide.PARAMETERS.RADIUS1 = 1.0;
+        Decide.NUMPOINTS = 3;
+        Decide.X = new double[]{0.0, 2.0, 4.0}; 
+        Decide.Y = new double[]{0.0, 0.0, 0.0};   
+
+        assertTrue(Decide.lic1(), "Expected LIC1 to be true when radius > RADIUS1");
+    }
+
+    @Test
+    @DisplayName("LIC 1 should be false when radius is smaller than RADIUS1")
+    void testLic1Negative() {
+        // Setting up new test parameters
+        Decide.PARAMETERS.RADIUS1 = 10.0;
+        Decide.NUMPOINTS = 3;
+        Decide.X = new double[]{0.0, 2.0, 4.0}; 
+        Decide.Y = new double[]{0.0, 0.0, 0.0};
+
+        assertFalse(Decide.lic1(), "Expected LIC1 to be false when all radius <= RADIUS1");
+    }
 }
