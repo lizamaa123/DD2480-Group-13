@@ -104,6 +104,25 @@ public class Decide {
         return CompType.GT;
     }
 
+    public static boolean lic0() {
+        for(int i = 0; i < NUMPOINTS - 1; i++) {
+            // consecutive data points e.g. (X[i],Y[i]) and (X[i+1],Y[i+1]) <-- from Glossary in assignment.
+            double x1 = X[i];
+            double x2 = X[i+1];
+            double y1 = Y[i];
+            double y2 = Y[i+1];
+            
+            // Euclidean distance measurement
+            double distance = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+
+            // condition
+            if(distance > PARAMETERS.LENGTH1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // function you must write
     public static void DECIDE() {
         // Implementation goes here
