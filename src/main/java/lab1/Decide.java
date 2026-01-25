@@ -121,6 +121,31 @@ public class Decide {
         return false;
     }
 
+      public static boolean lic13(){
+        if(NUMPOINTS < 5) return false;
+        int minPoints = 3 + PARAMETERS.A_PTS + PARAMETERS.B_PTS;
+        if(NUMPOINTS < minPoints) return false;
+        bool condition1 = false;
+        bool condition2 = false;
+
+        for (int i = 0; i < NUMPOINTS-2; i++) {
+            //points
+            double x1 = X[i];
+            double x2 = X[i+PARAMETERS.A_PTS];
+            double x3 = X[i+ PARAMETERS.B_PTS];
+            double y1 = Y[i];
+            double y2 = Y[i+PARAMETERS.A_PTS];
+            double y3 = Y[i+PARAMETERS.B_PTS];
+
+            //triangle sides
+            double a = Point2D.distance(x2, y2, x3, y3);
+            double b = Point2D.distance(x1, y1, x3, y3);
+            double c = Point2D.distance(x1, y1, x2, y2);
+
+            double area = 1/2 * Math.abs((x2-x1)*(y3-y1)-(x3-x1)*(y2-y1));
+            double circumradius = a*b*c / (4*area);
+        }
+
     // function you must write
     public static void DECIDE() {
         // Implementation goes here
