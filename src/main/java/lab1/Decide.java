@@ -125,6 +125,24 @@ public class Decide {
         return false;
     }
 
+    public static boolean lic10() {
+        if(NUMPOINTS < 5) {
+            return false;
+        }
+
+        for(int i = 0; i < NUMPOINTS - 2 - PARAMETERS.E_PTS - PARAMETERS.F_PTS; i++) {
+            int j = i + PARAMETERS.E_PTS + 1;
+            int k = j + PARAMETERS.F_PTS + 1;
+
+            double area = calculateTriangleArea(X[i], Y[i], X[j], Y[j], X[k], Y[k]);
+
+            if(area > PARAMETERS.AREA1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // function you must write
     public static void DECIDE() {
         // Implementation goes here
