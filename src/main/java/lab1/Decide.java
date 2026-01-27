@@ -138,7 +138,7 @@ public class Decide {
         return 0.5 * Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
     }
 
-    private static boolean lic6() {
+    public static boolean lic6() {
         if (NUMPOINTS < 3) { return false; }
 
         for (int i = 0; i <= NUMPOINTS - PARAMETERS.N_PTS; i++) {
@@ -157,7 +157,7 @@ public class Decide {
             }
 
             // Iterate through the points in the window (excluding the endpoints)
-            for (int j = startIdx + 1; j < endIdx; i++) {
+            for (int j = startIdx + 1; j < endIdx; j++) {
                 double distanceToLine;
                 if (isIdentical) {
                     distanceToLine = distance(startIdx, j);
