@@ -132,7 +132,7 @@ public class Decide {
         return 3;  // Quadrant 4
     }
 
-    private static boolean lic4() {
+    public static boolean lic4() {
         // If the set size is larger than the number of available points, the LIC is impossible
         if (PARAMETERS.Q_PTS > NUMPOINTS) { return false; }
 

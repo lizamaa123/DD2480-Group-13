@@ -53,7 +53,7 @@ class DecideTest {
         Decide.X[2] = -1.0; Decide.Y[2] = -1.0;  // Point 3 in quad 3
 
         // Window of points {0,1,2} occupies 3 quadrants, 3 > 2 is True so the LIC is met.
-        assertTrue("LIC 4 should be true when points are in more than QUADS quadrants", Decide.checkLIC4());
+        assertTrue(Decide.lic4(), "LIC 4 should be true when points are in more than QUADS quadrants");
     }
 
     @Test
@@ -68,6 +68,6 @@ class DecideTest {
         Decide.X[2] = 0.0; Decide.Y[2] = 1.0;
 
         // Window occupies only 1 quadrant, 1 > 2 is False so LIC is not met.
-        assertFalse("LIC 4 should be false when points are in same quadrant", Decide.checkLIC4());
+        assertFalse(Decide.lic4(), "LIC 4 should be false when points are in same quadrant");
     }
 }
