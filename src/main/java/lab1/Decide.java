@@ -121,6 +121,59 @@ public class Decide {
         return false;
     }
 
+    // Helper function for calculating the Euclidean distance between two points
+    private static double distance(int p1Idx, int p2Idx) {
+        double x1 = X[p1Idx];
+        double y1 = Y[p1Idx];
+        double x2 = X[p2Idx];
+        double y2 = Y[p2Idx];
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    // Helper function for calculating the area of a triangle formed by three points
+    private static double triangleArea(int p1, int p2, int p3) {
+        double x1 = X[p1], y1 = Y[p1];
+        double x2 = X[p2], y2 = Y[p2];
+        double x3 = X[p3], y3 = Y[p3];
+        return 0.5 * Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+    }
+
+    private static boolean lic6() {
+        if (NUMPOINTS < 3) { return false; }
+
+        for (int i = 0; i <= NUMPOINTS - PARAMETERS.N_PTS; i++) {
+            int startIdx = i;
+            int endIdx = i + PARAMETERS.N_PTS - 1;
+
+            // Check if first and last points are identical
+            boolean isIdentical =
+                    (DOUBLECOMPARE(X[startIdx], X[endIdx]) == CompType.EQ) &&
+                    (DOUBLECOMPARE(Y[startIdx], Y[endIdx]) == CompType.EQ);
+
+            // Calculate the length of the line segment
+            double lineLength = 0;
+            if (!isIdentical) {
+                lineLength = distance(startIdx, endIdx);
+            }
+
+            // Iterate through the points in the window (excluding the endpoints)
+            for (int j = startIdx + 1; j < endIdx; i++) {
+                double distanceToLine;
+                if (isIdentical) {
+                    distanceToLine = distance(startIdx, j);
+                } else {  // Use triangle geometry to find normal line
+                    double area = triangleArea(startIdx, endIdx, j);
+                    distanceToLine = (2 * area) / lineLength;
+                }
+                // LIC met if distance is greater than DIST
+                if (DOUBLECOMPARE(distanceToLine, PARAMETERS.DIST) == CompType.GT) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // function you must write
     public static void DECIDE() {
         // Implementation goes here
