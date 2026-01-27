@@ -176,5 +176,48 @@ class DecideTest {
         assertTrue(Decide.lic7(), "Expected Lic 7 to be true when d > LENGTH1");
     }
 
+    @Test
+    @DisplayName("LIC 12 should be true when one pair has distance > LENGTH1 AND one pair has distance < LENGTH2")
+    void testLic12Positive() {
+        Decide.NUMPOINTS = 4;
+        Decide.PARAMETERS.K_PTS = 1;
+        Decide.PARAMETERS.LENGTH1 = 5.0; // Need distance > 5
+        Decide.PARAMETERS.LENGTH2 = 2.0; //Need distance < 2
+
+        // Points: (0,0), (0,0), (6,0), (1,0)
+        // Pair 1 (Index 0 & 2): (0,0) -> (6,0). Dist = 6. (6 > 5) -> Condition1 TRUE
+        // Pair 2 (Index 1 & 3): (0,0) -> (1,0). Dist = 1. (1 < 2) -> Condition2 TRUE
+        Decide.X = new double[]{0.0, 0.0, 6.0, 1.0};
+        Decide.Y = new double[]{0.0, 0.0, 0.0, 0.0};
+
+        assertTrue(Decide.lic12(), "Expected Lic 12 to be true when both conditions are met");
+    }
+
+    @Test
+    @DisplayName("LIC 12 should be false when only distance > LENGTH1 exists (missing < LENGTH2)")
+    void testLic12NegativeMissingSmall() {
+        Decide.PARAMETERS.K_PTS = 1;
+        Decide.PARAMETERS.LENGTH1 = 5.0;
+        Decide.PARAMETERS.LENGTH2 = 2.0;
+        Decide.NUMPOINTS = 4;
+
+        // Pair 1 (Index 0 & 2): Dist = 6 (Satisfies > 5)
+        // Pair 2 (Index 1 & 3): Dist = 6 (Fails < 2)
+        // Only condition 1 is met -> returns false
+        Decide.X = new double[]{0.0, 0.0, 6.0, 6.0};
+        Decide.Y = new double[]{0.0, 0.0, 0.0, 0.0};
+
+        assertFalse(Decide.lic12(), "Expected LIC12 to be false when condition 2 is missing");
+    }
+
+    @Test
+    @DisplayName("LIC 12 should be false when NUMPOINTS < 3")
+    void testLic12InsufficientPoints() {
+        Decide.NUMPOINTS = 2;
+        Decide.X = new double[]{0.0, 5.0};
+        Decide.Y = new double[]{0.0, 0.0};
+
+        assertFalse(Decide.lic12(), "Expected LIC12 to be false when NUMPOINTS < 3");
+    }
 
 }
