@@ -123,7 +123,7 @@ public class Decide {
 
     public static boolean lic8(){
         if(NUMPOINTS >=5){
-            for(int i = 0; i < (NUMPOINTS - 2); i++){
+            for(int i = 0; i < (NUMPOINTS - PARAMETERS.A_PTS - PARAMETERS.B_PTS - 2); i++){
                 double x1 = X[i];
                 double x2 = X[i + PARAMETERS.A_PTS + 1];
                 double x3 = X[i + PARAMETERS.A_PTS + PARAMETERS.B_PTS + 2];
