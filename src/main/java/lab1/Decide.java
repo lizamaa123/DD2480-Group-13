@@ -105,6 +105,11 @@ public class Decide {
         return CompType.GT;
     }
 
+    // Shoelace formula for area of triangle
+    private static double calculateTriangleArea(double x1, double y1, double x2, double y2, double x3, double y3) {
+        return 0.5 * Math.abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2));
+    }
+
     public static boolean lic0() {
         for(int i = 0; i < NUMPOINTS - 1; i++) {
             // consecutive data points e.g. (X[i],Y[i]) and (X[i+1],Y[i+1]) <-- from Glossary in assignment.
@@ -201,8 +206,25 @@ public class Decide {
             double x3 = X[i + 2], y1 = Y[i];
             double y2 = Y[i + 1], y3 = Y[i + 2];
 
-            // Shoelace formula for area of triangle
-            double area = 0.5 * Math.abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2));
+            double area = calculateTriangleArea(x1, y1, x2, y2, x3, y3);
+
+            if(area > PARAMETERS.AREA1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean lic10() {
+        if(NUMPOINTS < 5) {
+            return false;
+        }
+
+        for(int i = 0; i < NUMPOINTS - 2 - PARAMETERS.E_PTS - PARAMETERS.F_PTS; i++) {
+            int j = i + PARAMETERS.E_PTS + 1;
+            int k = j + PARAMETERS.F_PTS + 1;
+
+            double area = calculateTriangleArea(X[i], Y[i], X[j], Y[j], X[k], Y[k]);
 
             if(area > PARAMETERS.AREA1) {
                 return true;
