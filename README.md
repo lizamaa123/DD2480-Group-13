@@ -2,7 +2,7 @@
 
 This repository contains the solution for ```DECIDE()``` function for the (version 5) "Launch Interceptor Program: Requirements Specification" (Knight, Leveson, 2016), as the first lab-assignment in the course DD2480, at KTH. 
 
-The program is a "hypothetical anti-ballistic missile system" where the assignment is to write the ```DECIDE()``` function. The function will determine if an interceptor should be launched, based on various combinations of so-called Launch Interceptor Conditions (LIC's). Depending on the combination of LIC's, the function will return a final ouput as a boolean signal; ```"YES"``` or ```"NO"```.
+The program is a "hypothetical anti-ballistic missile system" where the assignment is to write the ```DECIDE()``` function. The function will determine if an interceptor should be launched, based on various combinations of so-called Launch Interceptor Conditions (LIC's). Depending on the combination of LIC's, the function will return a final output as a boolean signal; ```"YES"``` or ```"NO"```.
 
 ## Prerequisites
 
@@ -69,13 +69,13 @@ mvn exec:java -Dexec.mainClass="lab1.Main"
 - Reviewed and merged PR's for following issues: LIC 6, 9, 13 and and FUV (with its corresponding unit tests)
 
 ### Remarkable
-We believe that our own contribution is something of a remarkable sort, especially in the way we have worked with quality assurance and or worklflow. Each memeber have had some previous experience working with one project in a larger group, but this was put to the test for this assignment. We had to learn very quickly to understand the established workflow and to continously communicate in case of any obsticles. Even with some previous knowledge on how to work with, e.g. Github, we have proved amazing result on the way we have collaborated especially when assigning issues to each other and handling merge conflicts. We have followed a stric workflow:
+We believe that our own contribution is something of a remarkable sort, especially in the way we have worked with quality assurance and or worklflow. Each member have had some previous experience working with one project in a larger group, but this was put to the test for this assignment. We had to learn very quickly to understand the established workflow and to continously communicate in case of any obstacles. Even with some previous knowledge on how to work with, e.g. Github, we have proved amazing result on the way we have collaborated especially when assigning issues to each other and handling merge conflicts. We have followed a strict workflow:
 1. Creating an issue and assign yourself (or a member)
 2. Creating a new branch for that issue
 3. Create a pull request and assign chosen member (peer review)
 4. Reviewer merges branch (or resolves merge if its easy, otherwise author will have to redo work).
  
-We believe that we have since start tried to utilize and work the same way proffesionals do it, and believe we have achieved that which makes us very proud of our work. This can also be seen in the way we have titled our issues as well as all the pull requests (synchronized). 
+We believe that we have since start tried to utilize and work the same way professionals do it, and believe we have achieved that which makes us very proud of our work. This can also be seen in the way we have titled our issues as well as all the pull requests (synchronized). 
 
 Besides that, we quickly established the logistics in how we would divide the work to make sure that everyone would have some part in other sub-assignments. This was done by ensuring that the same member who wrote the code would not review it, but instead assign it to someone else. In this way, any bugs, repetition of code, confusing code logistic etc. would be quickly noticed and handled early on. We also utilized Github Projects which have been very helpful in organizing the work, and have all strictly followed the tickets on the board to minimize double-work and miscommunication. 
 
