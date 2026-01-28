@@ -422,6 +422,57 @@ class DecideTest {
     }
 
     @Test
+    @DisplayName("PUM should handle ANDD logic correctly")
+    void testPumAndd() {
+        Decide.LCM = new Decide.Connectors[15][15];
+        Decide.PUM = new boolean[15][15];
+        Decide.CMV = new boolean[15];
+
+        // Case: LIC 0 is TRUE, LIC 1 is FALSE.
+        Decide.CMV[0] = true;
+        Decide.CMV[1] = false;
+        Decide.LCM[0][1] = Decide.Connectors.ANDD;
+
+        Decide.calculatePUM();
+
+        assertFalse(Decide.PUM[0][1], "true AND false should result in false");
+    }
+
+    @Test
+    @DisplayName("PUM should handle ORR logic correctly")
+    void testPumOrr() {
+        Decide.LCM = new Decide.Connectors[15][15];
+        Decide.PUM = new boolean[15][15];
+        Decide.CMV = new boolean[15];
+
+        // Case: LIC 0 is TRUE, LIC 1 is FALSE.
+        Decide.CMV[0] = true;
+        Decide.CMV[1] = false;
+        Decide.LCM[0][1] = Decide.Connectors.ORR;
+
+        Decide.calculatePUM();
+
+        assertTrue(Decide.PUM[0][1], "true OR false should result in true");
+    }
+
+    @Test
+    @DisplayName("PUM should handle NOTUSED logic correctly")
+    void testPumNotUsed() {
+        Decide.LCM = new Decide.Connectors[15][15];
+        Decide.PUM = new boolean[15][15];
+        Decide.CMV = new boolean[15];
+
+        // Case: Both LICs are FALSE.
+        Decide.CMV[0] = false;
+        Decide.CMV[1] = false;
+        Decide.LCM[0][1] = Decide.Connectors.NOTUSED;
+
+        Decide.calculatePUM();
+
+        assertTrue(Decide.PUM[0][1], "NOTUSED should always result in true");
+    }
+
+    @Test
     @DisplayName("LIC 12 should be true when one pair has distance > LENGTH1 AND one pair has distance < LENGTH2")
     void testLic12Positive() {
         Decide.NUMPOINTS = 4;
@@ -465,6 +516,7 @@ class DecideTest {
         assertFalse(Decide.lic12(), "Expected LIC12 to be false when NUMPOINTS < 3");
     }
 
+    @Test
     @DisplayName("Lic 9 should be false when angle is greater than pi - epsilon, or less than pi + epsilon")
     void testLic9Negative() {
         Decide.NUMPOINTS = 5;
