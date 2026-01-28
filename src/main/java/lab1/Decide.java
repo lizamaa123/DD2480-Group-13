@@ -494,7 +494,7 @@ public class Decide {
     // function you must write
     public static void DECIDE() {
         // Implementation goes here
-
+        setCMV();
         calculatePUM();
         computeFUV();
         
