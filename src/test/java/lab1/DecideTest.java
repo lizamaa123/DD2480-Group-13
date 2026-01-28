@@ -12,6 +12,8 @@ class DecideTest {
     void setUp() {
         // Reset parameters before every test to ensure clean state
         Decide.PARAMETERS = new Decide.ParametersT();
+        Decide.X = new double[100];
+        Decide.Y = new double[100];
     }
 
     // LIC 0 TEST
@@ -115,6 +117,30 @@ class DecideTest {
         assertFalse(Decide.lic3(), "Expected LIC3 to be false for area < AREA1");
     }
 
+    // LIC 5 TEST
+
+    @Test
+    public void testLic5Positive() {
+        // Requirement: moving backwards on x axis
+        Decide.NUMPOINTS = 3;
+        Decide.X[0] = 1.0;
+        Decide.X[1] = 5.0;
+        Decide.X[2] = 4.0; // Moved backwards compared to X[1] -> true
+        Decide.Y[0] = 0; Decide.Y[1] = 0; Decide.Y[2] = 0;  // Y values don't matter
+
+        assertTrue(Decide.lic5(), "LIC 5 should be true if x decreases");
+    }
+
+    @Test
+    public void testLic5Negative() {
+        Decide.NUMPOINTS = 3;
+        Decide.X[0] = 1.0;
+        Decide.X[1] = 2.0;
+        Decide.X[2] = 2.0; // 2 - 2 = 0 (not < 0)
+        Decide.Y[0] = 0; Decide.Y[1] = 0; Decide.Y[2] = 0;
+
+        assertFalse(Decide.lic5(), "LIC 5 should be false if x is not decreasing");
+    }
 
     //LIC 13 TEST
 
