@@ -1,4 +1,5 @@
 package lab1;
+
 public class Decide {
 
     // ////////////
@@ -222,6 +223,50 @@ public class Decide {
         }
         return false;
     }
+    public static boolean lic13(){
+        if(NUMPOINTS < 5) return false;
+        if(PARAMETERS.RADIUS2 <= 0) return false;
+        int minPoints = 3 + PARAMETERS.A_PTS + PARAMETERS.B_PTS;
+        if(NUMPOINTS < minPoints) return false;
+        boolean condition1 = false;
+        boolean condition2 = false;
+
+        for (int i = 0; i <= NUMPOINTS - minPoints; i++) { 
+            //points
+            double x1 = X[i];
+            double x2 = X[i+PARAMETERS.A_PTS+1];
+            double x3 = X[i+ PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
+            double y1 = Y[i];
+            double y2 = Y[i+PARAMETERS.A_PTS+1];
+            double y3 = Y[i+PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
+            double radius;
+
+            //triangle sides
+            double a = calculateDistance(x2, y2, x3, y3);
+            double b = calculateDistance(x1, y1, x3, y3);
+            double c = calculateDistance(x1, y1, x2, y2);
+
+            //calculate area of triangle
+            double area = calculateTriangleArea(x1, y1, x2, y2, x3, y3);
+
+            //colinear case
+            if (DOUBLECOMPARE(area, 0.0) == CompType.EQ) {
+                radius = 0.5 * Math.max(a,Math.max(b,c));
+            }
+            else{
+                //calculate radius of circumscribed circle
+                radius = a*b*c / (4*area);
+            }
+            if(radius > PARAMETERS.RADIUS1){ 
+                condition1 = true;
+            }
+            if(radius <= PARAMETERS.RADIUS2){
+                condition2 = true;
+            }
+        }
+        if(condition1 && condition2) return true;
+        return false;
+    }
 
     // Helper function for calculating the Euclidean distance between two points
     private static double distance(int p1Idx, int p2Idx) {
@@ -360,6 +405,7 @@ public class Decide {
                     PUM[i][j] = CMV[i] || CMV[j];
                 }
             }
+        }
         }
   
     // Generate FUV from PUV and PUM
