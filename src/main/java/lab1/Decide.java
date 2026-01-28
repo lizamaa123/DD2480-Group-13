@@ -494,5 +494,19 @@ public class Decide {
     // function you must write
     public static void DECIDE() {
         // Implementation goes here
+
+        calculatePUM();
+        computeFUV();
+
+        int trueFUV = 0;
+        for(int i = 0; i < 14; i++){
+            if(FUV[i] = true){
+                trueFUV++;
+            }
+        }
+        if(trueFUV == 14){
+            LAUNCH = true;
+        }
+        LAUNCH = false;
     }
 }
