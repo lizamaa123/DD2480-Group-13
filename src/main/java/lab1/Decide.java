@@ -608,5 +608,23 @@ public class Decide {
     // function you must write
     public static void DECIDE() {
         // Implementation goes here
+        setCMV();
+        calculatePUM();
+        computeFUV();
+        
+        int trueFUV = 0;
+        for(int i = 0; i < 15; i++){
+            if(FUV[i] == true){
+                trueFUV++;
+            }
+            else
+            {
+                LAUNCH = false;
+            }
+        }
+        if(trueFUV == 15){
+            LAUNCH = true;
+        }
+        
     }
 }
