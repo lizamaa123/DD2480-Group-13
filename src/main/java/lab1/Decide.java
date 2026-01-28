@@ -499,8 +499,8 @@ public class Decide {
         computeFUV();
         
         int trueFUV = 0;
-        for(int i = 0; i < 14; i++){
-            if(FUV[i] = true){
+        for(int i = 0; i < 15; i++){
+            if(FUV[i] == true){
                 trueFUV++;
             }
             else
@@ -508,7 +508,7 @@ public class Decide {
                 LAUNCH = false;
             }
         }
-        if(trueFUV == 14){
+        if(trueFUV == 15){
             LAUNCH = true;
         }
         
