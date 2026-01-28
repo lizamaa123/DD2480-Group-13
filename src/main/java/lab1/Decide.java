@@ -82,6 +82,10 @@ public class Decide {
     public static Connectors[][] LCM;
     private static Connectors[][] LCM2;
 
+    // Preliminary Unlocking Vector
+    public static boolean[] PUV;
+    private static boolean[] PUV2;
+
     // Preliminary Unlocking Matrix
     public static boolean[][] PUM;
     private static boolean[][] PUM2;
@@ -110,6 +114,10 @@ public class Decide {
         return 0.5 * Math.abs(x1*(y2-y3) + x2*(y3-y1) + x3*(y1-y2));
     }
 
+    private static double calculateDistance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+    }
+
     public static boolean lic0() {
         for(int i = 0; i < NUMPOINTS - 1; i++) {
             // consecutive data points e.g. (X[i],Y[i]) and (X[i+1],Y[i+1]) <-- from Glossary in assignment.
@@ -119,7 +127,7 @@ public class Decide {
             double y2 = Y[i+1];
             
             // Euclidean distance measurement
-            double distance = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+            double distance = calculateDistance(x1, y1, x2, y2);
 
             // condition
             if(distance > PARAMETERS.LENGTH1) {
@@ -139,11 +147,11 @@ public class Decide {
             double y3 = Y[i + 2];
 
             // Distance between (x1,y1) and (x2,y2)
-            double distance_a = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+            double distance_a = calculateDistance(x1, y1, x2, y2);
             // Distance between (x2,y2) and (x3,y3)
-            double distance_b = Math.sqrt(Math.pow(x3-x2, 2) + Math.pow(y3-y2, 2));
+            double distance_b = calculateDistance(x2, y2, x3, y3);
             // Distance between (x1,y1) and (x3,y3)
-            double distance_c = Math.sqrt(Math.pow(x3-x1, 2) + Math.pow(y3-y1, 2));
+            double distance_c = calculateDistance(x1, y1, x3, y3);
 
             double radius;
 
@@ -215,6 +223,51 @@ public class Decide {
         return false;
     }
 
+    // Helper function for calculating the Euclidean distance between two points
+    private static double distance(int p1Idx, int p2Idx) {
+        double x1 = X[p1Idx];
+        double y1 = Y[p1Idx];
+        double x2 = X[p2Idx];
+        double y2 = Y[p2Idx];
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    public static boolean lic6() {
+        if (NUMPOINTS < 3) { return false; }
+
+        for (int i = 0; i <= NUMPOINTS - PARAMETERS.N_PTS; i++) {
+            int startIdx = i;
+            int endIdx = i + PARAMETERS.N_PTS - 1;
+
+            // Check if first and last points are identical
+            boolean isIdentical =
+                    (DOUBLECOMPARE(X[startIdx], X[endIdx]) == CompType.EQ) &&
+                    (DOUBLECOMPARE(Y[startIdx], Y[endIdx]) == CompType.EQ);
+
+            // Calculate the length of the line segment
+            double lineLength = 0;
+            if (!isIdentical) {
+                lineLength = distance(startIdx, endIdx);
+            }
+
+            // Iterate through the points in the window (excluding the endpoints)
+            for (int j = startIdx + 1; j < endIdx; j++) {
+                double distanceToLine;
+                if (isIdentical) {
+                    distanceToLine = distance(startIdx, j);
+                } else {  // Use triangle geometry to find normal line
+                    double area = calculateTriangleArea(X[startIdx], Y[startIdx], X[endIdx], Y[endIdx], X[j], Y[j]);;
+                    distanceToLine = (2 * area) / lineLength;
+                }
+                // LIC met if distance is greater than DIST
+                if (DOUBLECOMPARE(distanceToLine, PARAMETERS.DIST) == CompType.GT) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     // Helper function for LIC4, handles ambiguity and gets correct quadrant
     private static int getQuadrant(int idx) {
         double x = X[idx];  // x-coordinate
@@ -280,13 +333,61 @@ public class Decide {
                 double y1 = Y[i];
                 double y2 = Y[i + PARAMETERS.K_PTS + 1];
 
-                double distance = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
+                double distance = calculateDistance(x1, y1, x2, y2);
                 if(distance > PARAMETERS.LENGTH1) {
                     return true;
                 }
             }
         }
         return false;
+    }
+
+    // Generate FUV from PUV and PUM
+    public static void computeFUV() {
+        // For every LIC represented in PUV
+        for (int i = 0; i < 15; i++) {
+            // If PUV[i] is false, the i:th LIC is irrelevant, so set FUV[i] to true
+            if (!PUV[i]) {
+                FUV[i] = true;
+            } else {
+                boolean entireRowTrue = true;
+                for (int j = 0; j < 15; j++) {
+                    if (i == j) { continue; }  // Skip diagonal of the PUM
+                    // If any element of the PUM row is false, break and set FUV[i] false
+                    if (!PUM[i][j]) {
+                        entireRowTrue = false;
+                        break;
+                    }
+                }
+                FUV[i] = entireRowTrue;
+            }
+        }
+    }
+    
+    public static boolean lic12() {
+        if(NUMPOINTS < 3) {
+            return false;
+        }
+        boolean condition1 = false; // Distance > LENGTH1
+        boolean condition2 = false; // Distance < LENGTH2
+
+        for(int i = 0; i < NUMPOINTS - 1 - PARAMETERS.K_PTS; i++) {
+            int j = i + PARAMETERS.K_PTS + 1;
+            double distance = calculateDistance(X[i], Y[i], X[j], Y[j]);
+            if(distance > PARAMETERS.LENGTH1) {
+                condition1 = true;
+            }
+
+            if(distance < PARAMETERS.LENGTH2) {
+                condition2 = true;
+            }
+
+            // Optimization: If both are already found, we can stop early
+            if (condition1 && condition2) {
+                return true;
+            }
+        }
+        return condition1 && condition2;
     }
 
     public static boolean lic9() {
