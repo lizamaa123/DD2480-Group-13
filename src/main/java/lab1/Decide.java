@@ -259,6 +259,45 @@ public class Decide {
         }
         return false;
     }
+    
+    // Helper function for LIC4, handles ambiguity and gets correct quadrant
+    private static int getQuadrant(int idx) {
+        double x = X[idx];  // x-coordinate
+        double y = Y[idx];  // y-coordinate
+
+        if (x >= 0 && y >= 0) { return 0; }  // Quadrant 1
+        if (x < 0 && y >= 0) { return 1; }  // Quadrant 2
+        if (x <= 0 && y < 0) { return 2; }  // Quadrant 3
+        return 3;  // Quadrant 4
+    }
+
+    public static boolean lic4() {
+        // If the set size is larger than the number of available points, the LIC is impossible
+        if (PARAMETERS.Q_PTS > NUMPOINTS) { return false; }
+
+        // For each possible set of points
+        for(int i = 0; i < NUMPOINTS - PARAMETERS.Q_PTS; i++) {
+            // Boolean array to track which of the four quadrants are occupied
+            boolean[] occupiedQuadrants = new boolean[4];
+            int uniqueQuadrants = 0;
+
+            // Check current set of Q_PTS points
+            for(int j = 0; j < PARAMETERS.Q_PTS; j++) {
+                int pointIdx = i + j;
+                int quadrant = getQuadrant(pointIdx);
+                // If this quadrant hasn't been seen in this window yet, count it
+                if (!occupiedQuadrants[quadrant]) {
+                    occupiedQuadrants[quadrant] = true;
+                    uniqueQuadrants++;
+                }
+            }
+            // LIC is met if number of unique quadrants exceeds threshold
+            if (uniqueQuadrants > PARAMETERS.QUADS) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static boolean lic10() {
         if(NUMPOINTS < 5) {

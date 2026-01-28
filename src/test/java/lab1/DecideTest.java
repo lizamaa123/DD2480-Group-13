@@ -172,6 +172,38 @@ class DecideTest {
         // 2 < 3 -> False
         assertFalse(Decide.lic6(), "LIC 6 should handle identical endpoints correctly");
     }
+    // LIC 4 TEST
+
+    @Test
+    public void testLic4Positive() {
+        // Requires consecutive points in more than QUADS quadrants
+        Decide.NUMPOINTS = 4;
+        Decide.PARAMETERS.Q_PTS = 3;
+        Decide.PARAMETERS.QUADS = 2;
+
+        Decide.X[0] = 1.0; Decide.Y[0] = 1.0;  // Point 1 in quad 1
+        Decide.X[1] = -1.0; Decide.Y[1] = 1.0;  // Point 2 in quad 2
+        Decide.X[2] = -1.0; Decide.Y[2] = -1.0;  // Point 3 in quad 3
+
+        // Window of points {0,1,2} occupies 3 quadrants, 3 > 2 is True so the LIC is met.
+        assertTrue(Decide.lic4(), "LIC 4 should be true when points are in more than QUADS quadrants");
+    }
+
+    @Test
+    public void testLic4Negative() {
+        Decide.NUMPOINTS = 4;
+        Decide.PARAMETERS.Q_PTS = 3;
+        Decide.PARAMETERS.QUADS = 2;
+
+        // All points in quad 1 or on boundary
+        Decide.X[0] = 1.0; Decide.Y[0] = 1.0;
+        Decide.X[1] = 0.0; Decide.Y[1] = 0.0;
+        Decide.X[2] = 0.0; Decide.Y[2] = 1.0;
+
+        // Window occupies only 1 quadrant, 1 > 2 is False so LIC is not met.
+        assertFalse(Decide.lic4(), "LIC 4 should be false when points are in same quadrant");
+    }
+
     @Test
     @DisplayName("LIC 10 should be positive when area is smaller than AREA1 with correct spacing")
     void testLic10Positive() {
@@ -260,6 +292,4 @@ class DecideTest {
         assertTrue(Decide.lic9(), "Expected Lic 9 to be positive for a 90 degree angle");
     }  
     
-
-
 }
