@@ -165,12 +165,12 @@ class DecideTest {
             10.0 + side2/2.0  // Set 2, point 3 
         };
         Decide.Y = new double[]{
-            0.0,           // Set 1, point 1 (index 0)
-            0.0,           // Set 2, point 1 (index 1)
-            0.0,           // Set 1, point 2 (index 2)
-            0.0,           // Set 2, point 2 (index 3)
-            height1,       // Set 1, point 3 (index 4)
-            height2        // Set 2, point 3 (index 5)
+            0.0,           // Set 1, point 1 
+            0.0,           // Set 2, point 1 
+            0.0,           // Set 1, point 2 
+            0.0,           // Set 2, point 2 
+            height1,       // Set 1, point 3
+            height2        // Set 2, point 3
         };
         
         assertTrue(Decide.lic13(), 
@@ -178,4 +178,21 @@ class DecideTest {
             "Set 2 (indices 1,3,5) has radius <= 0.6");
     }
 
+        @Test
+    @DisplayName("LIC 13 should be able to handle colinear points")
+    void testLic13ColinearPoints() {
+        // Setting up new test parameters
+        Decide.PARAMETERS.RADIUS1 = 0.5;
+        Decide.PARAMETERS.RADIUS2 = 0.6;
+        Decide.PARAMETERS.A_PTS = 1;
+        Decide.PARAMETERS.B_PTS = 1;
+        Decide.NUMPOINTS = 5;
+
+        // With A_PTS=1 and B_PTS=1, lic13 uses points (0,2,4).
+        // Pick points that are colinear and have a radius of 0.55
+        Decide.X = new double[]{0.0, 99.0, 0.55, 99.0, 0.55*2};
+        Decide.Y = new double[]{0.0, 99.0, 0.0, 99.0, 0.0}; //all points have the same y coordinate
+
+        assertTrue(Decide.lic13(), "Expected LIC13 to be true because 0.5 < R ≈ 0.55 <= 0.6");
+    }
 }
