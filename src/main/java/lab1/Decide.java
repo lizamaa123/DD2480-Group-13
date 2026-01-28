@@ -215,6 +215,45 @@ public class Decide {
         return false;
     }
 
+    // Helper function for LIC4, handles ambiguity and gets correct quadrant
+    private static int getQuadrant(int idx) {
+        double x = X[idx];  // x-coordinate
+        double y = Y[idx];  // y-coordinate
+
+        if (x >= 0 && y >= 0) { return 0; }  // Quadrant 1
+        if (x < 0 && y >= 0) { return 1; }  // Quadrant 2
+        if (x <= 0 && y < 0) { return 2; }  // Quadrant 3
+        return 3;  // Quadrant 4
+    }
+
+    public static boolean lic4() {
+        // If the set size is larger than the number of available points, the LIC is impossible
+        if (PARAMETERS.Q_PTS > NUMPOINTS) { return false; }
+
+        // For each possible set of points
+        for(int i = 0; i < NUMPOINTS - PARAMETERS.Q_PTS; i++) {
+            // Boolean array to track which of the four quadrants are occupied
+            boolean[] occupiedQuadrants = new boolean[4];
+            int uniqueQuadrants = 0;
+
+            // Check current set of Q_PTS points
+            for(int j = 0; j < PARAMETERS.Q_PTS; j++) {
+                int pointIdx = i + j;
+                int quadrant = getQuadrant(pointIdx);
+                // If this quadrant hasn't been seen in this window yet, count it
+                if (!occupiedQuadrants[quadrant]) {
+                    occupiedQuadrants[quadrant] = true;
+                    uniqueQuadrants++;
+                }
+            }
+            // LIC is met if number of unique quadrants exceeds threshold
+            if (uniqueQuadrants > PARAMETERS.QUADS) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean lic10() {
         if(NUMPOINTS < 5) {
             return false;
@@ -243,6 +282,41 @@ public class Decide {
 
                 double distance = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
                 if(distance > PARAMETERS.LENGTH1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean lic9() {
+        if(NUMPOINTS >= 5) {
+            for(int i = 0; i < (NUMPOINTS - PARAMETERS.C_PTS - PARAMETERS.D_PTS - 2); i++) {
+                double x1 = X[i];
+                double x2 = X[i + PARAMETERS.C_PTS + 1];
+                double x3 = X[i + PARAMETERS.C_PTS + PARAMETERS.D_PTS + 2];
+                double y1 = Y[i];
+                double y2 = Y[i + PARAMETERS.C_PTS + 1];
+                double y3 = Y[i + PARAMETERS.C_PTS + PARAMETERS.D_PTS + 2];
+
+                // angle is undefined if either vector has zero length
+                if((x1 == x2 && y1 == y2) || (x3 == x2 && y3 == y2)) {
+                    continue;
+                }
+
+                // computing vectors between the points
+                double v1x = (x1 - x2);
+                double v1y = (y1 - y2);
+                double v2x = (x3 - x2);
+                double v2y = (y3 - y2);
+
+                double v_dotProd = (v1x * v2x) + (v1y * v2y);
+                double v1_norm = Math.sqrt(Math.pow(v1x, 2) + Math.pow(v1y, 2));
+                double v2_norm = Math.sqrt(Math.pow(v2x, 2) + Math.pow(v2y, 2));
+
+                double angle = Math.acos(v_dotProd / (v1_norm * v2_norm));
+
+                if(angle < (PI - PARAMETERS.EPSILON) || angle > (PI + PARAMETERS.EPSILON)) {
                     return true;
                 }
             }
