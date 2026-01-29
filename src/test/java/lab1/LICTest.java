@@ -69,6 +69,10 @@ public class LICTest {
 
     // //////////// LIC 1  ///////////
 
+    /*
+    Unit test when computing LIC1 method with a valid input. Valid input is RADIUS1 ≥ 0.
+    This tests if a set of three consecutive data points cannot be contained wihtin or on a circle with RADIUS1, which should return true.
+     */
     @Test
     @DisplayName("LIC 1 should be true when radius is greater than RADIUS1")
     void testLic1Positive() {
@@ -81,6 +85,10 @@ public class LICTest {
         assertTrue(Decide.lic1(), "Expected LIC1 to be true when radius > RADIUS1");
     }
 
+    /*
+    Unit test when computing LIC1 method with a valid input. Valid input is RADIUS1 ≥ 0.
+    This tests if a set of three consecutive data points can be contained wihtin or on a circle with RADIUS1, which should return false.
+     */
     @Test
     @DisplayName("LIC 1 should be false when radius is smaller than RADIUS1")
     void testLic1Negative() {
@@ -91,6 +99,22 @@ public class LICTest {
         Decide.Y = new double[]{0.0, 0.0, 0.0};
 
         assertFalse(Decide.lic1(), "Expected LIC1 to be false when all radius <= RADIUS1");
+    }
+
+    /*
+    Unit test when computing LIC1 method with an invalid input should return false.
+    Invalid input is RADIUS1 < 0.
+     */
+    @Test
+    @DisplayName("LIC 1 should be false when RADIUS1 < 0 (invalid)")
+    void testLic1InvalidInput() {
+        // Setting up new test parameters
+        Decide.PARAMETERS.LENGTH1 = -1.0;
+        Decide.NUMPOINTS = 3;
+        Decide.X = new double[]{0.0, 5.0, 9.0}; 
+        Decide.Y = new double[]{0.0, 0.0, 0.0};
+
+        assertFalse(Decide.lic0(), "Expected LIC1 to be false when input is invalid");
     }
 
     // //////////// LIC 2  ///////////
