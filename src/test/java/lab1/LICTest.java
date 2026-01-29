@@ -27,7 +27,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 0 should be true when distance is greater than LENGTH1")
     void testLic0Positive() {
-        // Setting up new test parameters
         Decide.PARAMETERS.LENGTH1 = 10.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 11.0, 20.0}; 
@@ -44,7 +43,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 0 should be false when distance is smaller than LENGTH1")
     void testLic0Negative() {
-        // Setting up new test parameters
         Decide.PARAMETERS.LENGTH1 = 10.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 5.0, 9.0}; 
@@ -61,7 +59,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 0 should be false when LENGTH1 < 0 (invalid)")
     void testLic0InvalidInput() {
-        // Setting up new test parameters
         Decide.PARAMETERS.LENGTH1 = -1.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 5.0, 9.0}; 
@@ -80,7 +77,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 1 should be true when radius is greater than RADIUS1")
     void testLic1Positive() {
-        // Setting up new test parameters
         Decide.PARAMETERS.RADIUS1 = 1.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 2.0, 4.0};
@@ -97,7 +93,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 1 should be false when radius is smaller than RADIUS1")
     void testLic1Negative() {
-        // Setting up new test parameters
         Decide.PARAMETERS.RADIUS1 = 10.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 2.0, 4.0};
@@ -114,7 +109,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 1 should be false when RADIUS1 < 0 (invalid)")
     void testLic1InvalidInput() {
-        // Setting up new test parameters
         Decide.PARAMETERS.LENGTH1 = -1.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 5.0, 9.0}; 
@@ -133,7 +127,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 2 should be true when angle (90 = pi/2) is smaller than PI - EPSILON")
     void testLic2Positive() {
-        // Setting up new test parameters
         Decide.PARAMETERS.EPSILON = 0.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 0.0, 1.0};
@@ -150,7 +143,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 2 should be false for a straight line (angle is 180 = pi)")
     void testLic2Negative() {
-        // Setting up new test parameters
         Decide.PARAMETERS.EPSILON = 0.1;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 1.0, 2.0};
@@ -167,7 +159,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 2 should be false when EPSILON > PI (invalid)")
     void testLic2InvalidInput() {
-        // Setting up new test parameters
         Decide.PARAMETERS.EPSILON = 4.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 5.0, 9.0}; 
@@ -186,7 +177,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 3 should be true when area is bigger than AREA1")
     void testLic3Positive() {
-        // Setting up new test parameters
         Decide.PARAMETERS.AREA1 = 0.2;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 0.0, 1.0};
@@ -203,7 +193,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 3 should be false when area is smaller than AREA1")
     void testLic3Negative() {
-        // Setting up new test parameters
         Decide.PARAMETERS.AREA1 = 5.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 2.0, 1.0};
@@ -220,7 +209,6 @@ public class LICTest {
     @Test
     @DisplayName("LIC 3 should be false when AREA1 < 0 (invalid)")
     void testLic3InvalidInput() {
-        // Setting up new test parameters
         Decide.PARAMETERS.AREA1 = -5.0;
         Decide.NUMPOINTS = 3;
         Decide.X = new double[]{0.0, 5.0, 9.0}; 
