@@ -16,21 +16,6 @@ public class Decide {
         Connectors(int value) { this.value = value; }
     }
 
-    // pointer to an array of 100 doubles
-    // represented as double[] in Java
-
-    // pointer to a 2-D array of [15,15] CONNECTORS
-    // represented as Connectors[][] in Java
-
-    // always in the range [0..1]
-    // represented as boolean in Java (originally typedef int boolean)
-
-    // pointer to a 2-D array of [15,15] booleans
-    // represented as boolean[][] in Java
-
-    // pointer to an array of 15 booleans
-    // represented as boolean[] in Java
-
     public enum CompType {
         LT(1111),
         EQ(1112),
@@ -65,43 +50,33 @@ public class Decide {
 
     // //////////// global variable declarations ////////////
     public static ParametersT PARAMETERS = new ParametersT();
-    private static ParametersT PARAMETERS2 = new ParametersT();
 
     // X coordinates of data points
     public static double[] X;
-    private static double[] X2;
 
     // Y coordinates of data points
     public static double[] Y;
-    private static double[] Y2;
 
     // Number of data points
     public static int NUMPOINTS;
-    private static int NUMPOINTS2;
 
     // Logical Connector Matrix
     public static Connectors[][] LCM;
-    private static Connectors[][] LCM2;
 
     // Preliminary Unlocking Vector
     public static boolean[] PUV;
-    private static boolean[] PUV2;
 
     // Preliminary Unlocking Matrix
     public static boolean[][] PUM;
-    private static boolean[][] PUM2;
 
     // Conditions Met Vector
     public static boolean[] CMV;
-    private static boolean[] CMV2;
 
     // Final Unlocking Vector
     public static boolean[] FUV;
-    private static boolean[] FUV2;
 
     // Decision: Launch or No Launch
     public static boolean LAUNCH;
-    private static boolean LAUNCH2;
 
     // compares floating point numbers
     public static CompType DOUBLECOMPARE(double A, double B) {
@@ -109,6 +84,8 @@ public class Decide {
         if (A < B) return CompType.LT;
         return CompType.GT;
     }
+
+    // //////////// PRIVATE HELPER METHODS  ///////////
 
     // Shoelace formula for area of triangle
     private static double calculateTriangleArea(double x1, double y1, double x2, double y2, double x3, double y3) {
@@ -118,6 +95,19 @@ public class Decide {
     private static double calculateDistance(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2));
     }
+
+    // Helper function for LIC4, handles ambiguity and gets correct quadrant
+    private static int getQuadrant(int idx) {
+        double x = X[idx];  // x-coordinate
+        double y = Y[idx];  // y-coordinate
+
+        if (x >= 0 && y >= 0) { return 0; }  // Quadrant 1
+        if (x < 0 && y >= 0) { return 1; }  // Quadrant 2
+        if (x <= 0 && y < 0) { return 2; }  // Quadrant 3
+        return 3;  // Quadrant 4
+    }
+
+    // //////////// LIC'S  ///////////
 
     public static boolean lic0() {
         for(int i = 0; i < NUMPOINTS - 1; i++) {
@@ -223,107 +213,13 @@ public class Decide {
         }
         return false;
     }
-    public static boolean lic13(){
-        if(NUMPOINTS < 5) return false;
-        if(PARAMETERS.RADIUS2 <= 0) return false;
-        int minPoints = 3 + PARAMETERS.A_PTS + PARAMETERS.B_PTS;
-        if(NUMPOINTS < minPoints) return false;
-        boolean condition1 = false;
-        boolean condition2 = false;
 
-        for (int i = 0; i <= NUMPOINTS - minPoints; i++) { 
-            //points
-            double x1 = X[i];
-            double x2 = X[i+PARAMETERS.A_PTS+1];
-            double x3 = X[i+ PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
-            double y1 = Y[i];
-            double y2 = Y[i+PARAMETERS.A_PTS+1];
-            double y3 = Y[i+PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
-            double radius;
-
-            //triangle sides
-            double a = calculateDistance(x2, y2, x3, y3);
-            double b = calculateDistance(x1, y1, x3, y3);
-            double c = calculateDistance(x1, y1, x2, y2);
-
-            //calculate area of triangle
-            double area = calculateTriangleArea(x1, y1, x2, y2, x3, y3);
-
-            //colinear case
-            if (DOUBLECOMPARE(area, 0.0) == CompType.EQ) {
-                radius = 0.5 * Math.max(a,Math.max(b,c));
-            }
-            else{
-                //calculate radius of circumscribed circle
-                radius = a*b*c / (4*area);
-            }
-            if(radius > PARAMETERS.RADIUS1){ 
-                condition1 = true;
-            }
-            if(radius <= PARAMETERS.RADIUS2){
-                condition2 = true;
-            }
-        }
-        if(condition1 && condition2) return true;
-        return false;
-    }
-
-    // Helper function for calculating the Euclidean distance between two points
-    private static double distance(int p1Idx, int p2Idx) {
-        double x1 = X[p1Idx];
-        double y1 = Y[p1Idx];
-        double x2 = X[p2Idx];
-        double y2 = Y[p2Idx];
-        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-    }
-
-    public static boolean lic6() {
-        if (NUMPOINTS < 3) { return false; }
-
-        for (int i = 0; i <= NUMPOINTS - PARAMETERS.N_PTS; i++) {
-            int startIdx = i;
-            int endIdx = i + PARAMETERS.N_PTS - 1;
-
-            // Check if first and last points are identical
-            boolean isIdentical =
-                    (DOUBLECOMPARE(X[startIdx], X[endIdx]) == CompType.EQ) &&
-                    (DOUBLECOMPARE(Y[startIdx], Y[endIdx]) == CompType.EQ);
-
-            // Calculate the length of the line segment
-            double lineLength = 0;
-            if (!isIdentical) {
-                lineLength = distance(startIdx, endIdx);
-            }
-
-            // Iterate through the points in the window (excluding the endpoints)
-            for (int j = startIdx + 1; j < endIdx; j++) {
-                double distanceToLine;
-                if (isIdentical) {
-                    distanceToLine = distance(startIdx, j);
-                } else {  // Use triangle geometry to find normal line
-                    double area = calculateTriangleArea(X[startIdx], Y[startIdx], X[endIdx], Y[endIdx], X[j], Y[j]);;
-                    distanceToLine = (2 * area) / lineLength;
-                }
-                // LIC met if distance is greater than DIST
-                if (DOUBLECOMPARE(distanceToLine, PARAMETERS.DIST) == CompType.GT) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    // Helper function for LIC4, handles ambiguity and gets correct quadrant
-    private static int getQuadrant(int idx) {
-        double x = X[idx];  // x-coordinate
-        double y = Y[idx];  // y-coordinate
-
-        if (x >= 0 && y >= 0) { return 0; }  // Quadrant 1
-        if (x < 0 && y >= 0) { return 1; }  // Quadrant 2
-        if (x <= 0 && y < 0) { return 2; }  // Quadrant 3
-        return 3;  // Quadrant 4
-    }
-
+    /**
+     * LIC 4: Quadrant check.
+     * Checks if there is a set of Q_PTS consecutive data points that lie in more than QUADS quadrants.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.Q_PTS, PARAMETERS.QUADS.
+     * Returns: true if the condition is met, false otherwise.
+     */
     public static boolean lic4() {
         // If the set size is larger than the number of available points, the LIC is impossible
         if (PARAMETERS.Q_PTS > NUMPOINTS) { return false; }
@@ -352,25 +248,67 @@ public class Decide {
         return false;
     }
 
-    public static boolean lic10() {
-        if(NUMPOINTS < 5) {
-            return false;
-        }
-
-        for(int i = 0; i < NUMPOINTS - 2 - PARAMETERS.E_PTS - PARAMETERS.F_PTS; i++) {
-            int j = i + PARAMETERS.E_PTS + 1;
-            int k = j + PARAMETERS.F_PTS + 1;
-
-            double area = calculateTriangleArea(X[i], Y[i], X[j], Y[j], X[k], Y[k]);
-
-            if(area > PARAMETERS.AREA1) {
+    /**
+     * LIC 5: Check for movement in the negative x-direction
+     * Checks if there exists a pair of consecutive points
+     * such that X[j] - X[i] < 0 (where j = i + 1).
+     * Inputs: Global variables X, NUMPOINTS.
+     * Returns: true if two consecutive points move backward on the x-axis, false otherwise
+     */
+    public static boolean lic5() {
+        for (int i = 0; i < NUMPOINTS - 1; i++) {
+            if (DOUBLECOMPARE(X[i+1] - X[i], 0.0) == CompType.LT) {
                 return true;
             }
         }
         return false;
     }
-  
-  public static boolean lic7() {
+
+    /**
+     * LIC 6: Point-to-line distance check
+     * Checks if there exists a set of N_PTS consecutive points where at least one point lies
+     * further than DIST from the line joining the first and last points of the set.
+     * Handles the case where the first and last points are identical.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.N_PTS, PARAMETERS.DIST.
+     * Returns: true if the condition is met, false otherwise.
+     */
+    public static boolean lic6() {
+        if (NUMPOINTS < 3) { return false; }
+
+        for (int i = 0; i <= NUMPOINTS - PARAMETERS.N_PTS; i++) {
+            int startIdx = i;
+            int endIdx = i + PARAMETERS.N_PTS - 1;
+
+            // Check if first and last points are identical
+            boolean isIdentical =
+                    (DOUBLECOMPARE(X[startIdx], X[endIdx]) == CompType.EQ) &&
+                    (DOUBLECOMPARE(Y[startIdx], Y[endIdx]) == CompType.EQ);
+
+            // Calculate the length of the line segment
+            double lineLength = 0;
+            if (!isIdentical) {
+                lineLength = calculateDistance(X[startIdx], Y[startIdx], X[endIdx], Y[endIdx]);
+            }
+
+            // Iterate through the points in the window (excluding the endpoints)
+            for (int j = startIdx + 1; j < endIdx; j++) {
+                double distanceToLine;
+                if (isIdentical) {
+                    distanceToLine = calculateDistance(X[startIdx], Y[startIdx], X[j], Y[j]);
+                } else {  // Use triangle geometry to find normal line
+                    double area = calculateTriangleArea(X[startIdx], Y[startIdx], X[endIdx], Y[endIdx], X[j], Y[j]);;
+                    distanceToLine = (2 * area) / lineLength;
+                }
+                // LIC met if distance is greater than DIST
+                if (DOUBLECOMPARE(distanceToLine, PARAMETERS.DIST) == CompType.GT) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean lic7() {
         if(NUMPOINTS >= 3) {
             for(int i = 0; i < (NUMPOINTS - 1); i++){
                 double x1 = X[i];
@@ -387,21 +325,6 @@ public class Decide {
         return false;
     }
 
-    public static boolean lic11() {
-        if(NUMPOINTS < 3) {
-            return false;
-        }
-
-        for(int i = 0; i < NUMPOINTS - 1 - PARAMETERS.G_PTS; i++) {
-            int j = i + PARAMETERS.G_PTS + 1;
-
-            if(X[j] - X[i] < 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static boolean lic8(){
         if(NUMPOINTS >=5){
             for(int i = 0; i < (NUMPOINTS - PARAMETERS.A_PTS - PARAMETERS.B_PTS - 2); i++){
@@ -413,15 +336,14 @@ public class Decide {
                 double y3 = Y[i + PARAMETERS.A_PTS + PARAMETERS.B_PTS + 2];
                 
                 // FROM LIC 1
-                double distance_a = Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1,2));
-                double distance_b = Math.sqrt(Math.pow(x3-x2, 2) + Math.pow(y3-y2, 2));
-                double distance_c = Math.sqrt(Math.pow(x3-x1, 2) + Math.pow(y3-y1, 2));
+                double distance_a = calculateDistance(x1, y1, x2, y2);
+                double distance_b = calculateDistance(x2, y2, x3, y3);
+                double distance_c = calculateDistance(x1, y1, x3, y3);
 
                 double radius;
 
                 if(Math.pow(distance_a, 2) + Math.pow(distance_b,2) <= Math.pow(distance_c, 2)) {
                     radius = distance_c / 2;
-
                 }
                 else if(Math.pow(distance_a, 2) + Math.pow(distance_c, 2) <= Math.pow(distance_b, 2)) {
                     radius = distance_b / 2;
@@ -439,94 +361,7 @@ public class Decide {
                 }
             }
         }
-  return false;
-}
-
-
-    public static void calculatePUM() {
-        PUM = new boolean[15][15];
-
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 15; j++) {
-                Connectors operation = LCM[i][j];
-
-                if (operation == Connectors.NOTUSED) {
-                    PUM[i][j] = true;
-                }
-                else if (operation == Connectors.ANDD) {
-                    PUM[i][j] = CMV[i] && CMV[j];
-                }
-                else if (operation == Connectors.ORR) {
-                    PUM[i][j] = CMV[i] || CMV[j];
-                }
-            }
-        }
-        }
-  
-    // Generate FUV from PUV and PUM
-    public static void computeFUV() {
-        // For every LIC represented in PUV
-        for (int i = 0; i < 15; i++) {
-            // If PUV[i] is false, the i:th LIC is irrelevant, so set FUV[i] to true
-            if (!PUV[i]) {
-                FUV[i] = true;
-            } else {
-                boolean entireRowTrue = true;
-                for (int j = 0; j < 15; j++) {
-                    if (i == j) { continue; }  // Skip diagonal of the PUM
-                    // If any element of the PUM row is false, break and set FUV[i] false
-                    if (!PUM[i][j]) {
-                        entireRowTrue = false;
-                        break;
-                    }
-                }
-                FUV[i] = entireRowTrue;
-            }
-        }
-    }
-
-    public static void setCMV(){
-        CMV[0] = lic0();
-        CMV[1] = lic1();
-        CMV[2] = lic2();
-        CMV[3] = lic3();
-        CMV[4] = lic4();
-        CMV[5] = lic5();
-        CMV[6] = lic6();
-        CMV[7] = lic7();
-        CMV[8] = lic8();
-        CMV[9] = lic9();
-        CMV[10] = lic10();
-        CMV[11] = lic11();
-        CMV[12] = lic12();
-        CMV[13] = lic13();
-        CMV[14] = lic14();
-    }
-    
-    public static boolean lic12() {
-        if(NUMPOINTS < 3) {
-            return false;
-        }
-        boolean condition1 = false; // Distance > LENGTH1
-        boolean condition2 = false; // Distance < LENGTH2
-
-        for(int i = 0; i < NUMPOINTS - 1 - PARAMETERS.K_PTS; i++) {
-            int j = i + PARAMETERS.K_PTS + 1;
-            double distance = calculateDistance(X[i], Y[i], X[j], Y[j]);
-            if(distance > PARAMETERS.LENGTH1) {
-                condition1 = true;
-            }
-
-            if(distance < PARAMETERS.LENGTH2) {
-                condition2 = true;
-            }
-
-            // Optimization: If both are already found, we can stop early
-            if (condition1 && condition2) {
-                return true;
-            }
-        }
-        return condition1 && condition2;
+        return false;
     }
 
     public static boolean lic9() {
@@ -564,14 +399,156 @@ public class Decide {
         return false;
     }
 
+    /**
+     * LIC 10: Triangle Area Check.
+     * Checks if there exists at least one set of three data points separated by exactly
+     * E_PTS and F_PTS consecutive intervening points, respectively, that form a
+     * triangle with area greater than AREA1.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.E_PTS, PARAMETERS.F_PTS, PARAMETERS.AREA1.
+     * Returns: true if the condition is met, false otherwise.
+     */
+    public static boolean lic10() {
+        if(NUMPOINTS < 5) {
+            return false;
+        }
+
+        for(int i = 0; i < NUMPOINTS - 2 - PARAMETERS.E_PTS - PARAMETERS.F_PTS; i++) {
+            int j = i + PARAMETERS.E_PTS + 1;
+            int k = j + PARAMETERS.F_PTS + 1;
+
+            double area = calculateTriangleArea(X[i], Y[i], X[j], Y[j], X[k], Y[k]);
+
+            if(area > PARAMETERS.AREA1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * LIC 11: X-coordinate Difference Check.
+     * Checks if there exists at least one set of two data points, separated by exactly
+     * G_PTS consecutive intervening points, such that the second point has a smaller
+     * X-coordinate than the first (X[j] - X[i] < 0).
+     * Inputs: Global variables X, NUMPOINTS, PARAMETERS.G_PTS.
+     * Returns: true if the condition is met, false otherwise.
+     */
+    public static boolean lic11() {
+        if(NUMPOINTS < 3) {
+            return false;
+        }
+
+        for(int i = 0; i < NUMPOINTS - 1 - PARAMETERS.G_PTS; i++) {
+            int j = i + PARAMETERS.G_PTS + 1;
+
+            if(X[j] - X[i] < 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * LIC 12: Two-Distance Check.
+     * Checks if there exists at least one set of two data points, separated by K_PTS,
+     * with distance greater than LENGTH1. AND checks if there exists at least one set
+     * (can be the same) separated by K_PTS with distance less than LENGTH2.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.K_PTS, PARAMETERS.LENGTH1, PARAMETERS.LENGTH2.
+     * Returns: true if both conditions are met, false otherwise.
+     */
+    public static boolean lic12() {
+        if(NUMPOINTS < 3) {
+            return false;
+        }
+        boolean condition1 = false; // Distance > LENGTH1
+        boolean condition2 = false; // Distance < LENGTH2
+
+        for(int i = 0; i < NUMPOINTS - 1 - PARAMETERS.K_PTS; i++) {
+            int j = i + PARAMETERS.K_PTS + 1;
+            double distance = calculateDistance(X[i], Y[i], X[j], Y[j]);
+            if(distance > PARAMETERS.LENGTH1) {
+                condition1 = true;
+            }
+
+            if(distance < PARAMETERS.LENGTH2) {
+                condition2 = true;
+            }
+
+            // Optimization: If both are already found, we can stop early
+            if (condition1 && condition2) {
+                return true;
+            }
+        }
+        return condition1 && condition2;
+    }
+
+    /**
+     * LIC  13: Radius check
+     * Checks if there exists a set of consecutive points seperated by A_PTS and B_PTS,
+     * that cannot be contained in a circle with radius RADIUS1. (radius > RADIUS1)
+     * And if there exists a set of consecutive points seperated by A_PTS and B_PTS, 
+     * that can be contained in a circle with radius RADIUS2. (radius <= RADIUS2)
+     * If the points are colinear, the radius is half of the longest distance between the points.
+     * If the points are not colinear, the radius is the radius of the circumscribed circle using the Shoelace formula.
+     * RADIUS2 must be greater than 0.
+     * NUMPOINTS must be greater than or equal to 5.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.A_PTS, PARAMETERS.B_PTS, PARAMETERS.RADIUS1, PARAMETERS.RADIUS2.
+     * Returns: true if both conditions are met, false otherwise.
+     */
+    public static boolean lic13(){
+        if(NUMPOINTS < 5) return false;
+        if(PARAMETERS.RADIUS2 <= 0) return false;
+        int minPoints = 3 + PARAMETERS.A_PTS + PARAMETERS.B_PTS;
+        if(NUMPOINTS < minPoints) return false;
+        boolean condition1 = false;
+        boolean condition2 = false;
+
+        for (int i = 0; i <= NUMPOINTS - minPoints; i++) { 
+            double x1 = X[i];
+            double x2 = X[i+PARAMETERS.A_PTS+1];
+            double x3 = X[i+ PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
+            double y1 = Y[i];
+            double y2 = Y[i+PARAMETERS.A_PTS+1];
+            double y3 = Y[i+PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
+            double radius;
+            double a = calculateDistance(x2, y2, x3, y3);
+            double b = calculateDistance(x1, y1, x3, y3);
+            double c = calculateDistance(x1, y1, x2, y2);
+            double area = calculateTriangleArea(x1, y1, x2, y2, x3, y3);
+
+            if (DOUBLECOMPARE(area, 0.0) == CompType.EQ) {
+                radius = 0.5 * Math.max(a,Math.max(b,c));
+            }
+            else{
+                radius = a*b*c / (4*area);
+            }
+            if(radius > PARAMETERS.RADIUS1){ 
+                condition1 = true;
+            }
+            if(radius <= PARAMETERS.RADIUS2){
+                condition2 = true;
+            }
+        }
+        return condition1 && condition2;
+    }
+
+    /**
+     * LIC 14: Area check
+     * Checks if there exists a set of consecutive points seperated by E_PTS and F_PTS, that has an area greater than AREA1. (area > AREA1)
+     * And if there exists a set of consecutive points seperated by E_PTS and F_PTS, that has an area less than AREA2. (area < AREA2)
+     * AREA2 must be equal to or greater than 0.
+     * NUMPOINTS must be greater than or equal to 5.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.E_PTS, PARAMETERS.F_PTS, PARAMETERS.AREA1, PARAMETERS.AREA2.
+     * Returns: true if both conditions are met, false otherwise.
+     */
     public static boolean lic14(){
         if(NUMPOINTS < 5) return false;
         if(PARAMETERS.AREA2 <= 0) return false;
         int minPoints = 3 + PARAMETERS.E_PTS + PARAMETERS.F_PTS;
         if(NUMPOINTS < minPoints) return false;
-        boolean condition1 = false; // area > AREA1
-        boolean condition2 = false; // area < AREA2
-
+        boolean condition1 = false;
+        boolean condition2 = false;
+        
         for (int i = 0; i <= NUMPOINTS - minPoints; i++) { 
 
             double x1 = X[i];
@@ -592,22 +569,82 @@ public class Decide {
         }
         return condition1 && condition2;
     }
-    
-    // Checks if there is at least one point which has moved in
-    // the negative x-direction compared to the point before it
-    public static boolean lic5() {
-        for (int i = 0; i < NUMPOINTS - 1; i++) {
-            if (DOUBLECOMPARE(X[i+1] - X[i], 0.0) == CompType.LT) {
-                return true;
-            }
-        }
-        return false;
+
+    // //////////// CMV & PUM & FUV  ///////////
+
+    public static void setCMV(){
+        CMV[0] = lic0();
+        CMV[1] = lic1();
+        CMV[2] = lic2();
+        CMV[3] = lic3();
+        CMV[4] = lic4();
+        CMV[5] = lic5();
+        CMV[6] = lic6();
+        CMV[7] = lic7();
+        CMV[8] = lic8();
+        CMV[9] = lic9();
+        CMV[10] = lic10();
+        CMV[11] = lic11();
+        CMV[12] = lic12();
+        CMV[13] = lic13();
+        CMV[14] = lic14();
     }
 
+    /**
+     * Calculates the Preliminary Unlocking Matrix (PUM).
+     * Populates the PUM based on the Logical Connector Matrix (LCM) and the Conditions Met Vector (CMV).
+     * Logic:
+     * - ANDD: True if both CMV[i] and CMV[j] are true.
+     * - ORR: True if either CMV[i] or CMV[j] is true.
+     * - NOTUSED: Always true.
+     * Inputs: Global variables LCM, CMV.
+     * Output: Populates the global PUM matrix.
+     */
+    public static void calculatePUM() {
+        PUM = new boolean[15][15];
 
-    // function you must write
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                Connectors operation = LCM[i][j];
+
+                if (operation == Connectors.NOTUSED) {
+                    PUM[i][j] = true;
+                }
+                else if (operation == Connectors.ANDD) {
+                    PUM[i][j] = CMV[i] && CMV[j];
+                }
+                else if (operation == Connectors.ORR) {
+                    PUM[i][j] = CMV[i] || CMV[j];
+                }
+            }
+        }
+    }
+  
+    // Generate FUV from PUV and PUM
+    public static void computeFUV() {
+        // For every LIC represented in PUV
+        for (int i = 0; i < 15; i++) {
+            // If PUV[i] is false, the i:th LIC is irrelevant, so set FUV[i] to true
+            if (!PUV[i]) {
+                FUV[i] = true;
+            } else {
+                boolean entireRowTrue = true;
+                for (int j = 0; j < 15; j++) {
+                    if (i == j) { continue; }  // Skip diagonal of the PUM
+                    // If any element of the PUM row is false, break and set FUV[i] false
+                    if (!PUM[i][j]) {
+                        entireRowTrue = false;
+                        break;
+                    }
+                }
+                FUV[i] = entireRowTrue;
+            }
+        }
+    }
+
+    // //////////// DECIDE  ///////////
+
     public static void DECIDE() {
-        // Implementation goes here
         setCMV();
         calculatePUM();
         computeFUV();
@@ -625,6 +662,8 @@ public class Decide {
         if(trueFUV == 15){
             LAUNCH = true;
         }
-        
+
+        if(LAUNCH) {System.out.println("YES");}
+        else{System.out.println("NO");}
     }
 }
