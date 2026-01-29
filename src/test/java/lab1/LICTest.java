@@ -119,6 +119,13 @@ public class LICTest {
 
     // //////////// LIC 2  ///////////
 
+    /*
+    Unit test when computing LIC2 method with a valid input. Valid input is 0 ≤ EPSILON < PI.
+    This tests if a set of three consecutive data points can form an angle such that:
+    1. angle < (PI−EPSILON) 
+    2. angle > (PI + EPSILON)
+    , which should return true
+     */
     @Test
     @DisplayName("LIC 2 should be true when angle (90 = pi/2) is smaller than PI - EPSILON")
     void testLic2Positive() {
@@ -130,6 +137,14 @@ public class LICTest {
 
         assertTrue(Decide.lic2(), "Expected LIC2 to be true for 90 degree angle");
     }
+
+    /*
+    Unit test when computing LIC2 method with a valid input. Valid input is 0 ≤ EPSILON < PI.
+    This tests if a set of three consecutive data points cannot form an angle such that:
+    1. angle < (PI−EPSILON) 
+    2. angle > (PI + EPSILON)
+    , which should return false. E.g., a straight line.
+     */
     @Test
     @DisplayName("LIC 2 should be false for a straight line (angle is 180 = pi)")
     void testLic2Negative() {
@@ -140,6 +155,24 @@ public class LICTest {
         Decide.Y = new double[]{0.0, 0.0, 0.0};
 
         assertFalse(Decide.lic2(), "Expected LIC2 to be false for a straight line");
+    }
+
+    /*
+    Unit test when computing LIC2 method with an invalid input should return false.
+    Invalid input is when:
+    1. EPSILON < 0 - resulting in a negative tolerance which is not valid
+    2. EPSILON > PI - resulting in an invalid angle (requires an angle < 0 or > 2*PI)
+     */
+    @Test
+    @DisplayName("LIC 2 should be false when EPSILON > PI (invalid)")
+    void testLic2InvalidInput() {
+        // Setting up new test parameters
+        Decide.PARAMETERS.EPSILON = 4.0;
+        Decide.NUMPOINTS = 3;
+        Decide.X = new double[]{0.0, 5.0, 9.0}; 
+        Decide.Y = new double[]{0.0, 0.0, 0.0};
+
+        assertFalse(Decide.lic2(), "Expected LIC2 to be false when input is invalid");
     }
 
     // //////////// LIC 3  ///////////
