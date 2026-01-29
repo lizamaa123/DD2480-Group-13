@@ -458,6 +458,19 @@ public class Decide {
         return condition1 && condition2;
     }
 
+    /**
+     * LIC  13: Radius check
+     * Checks if there exists a set of consecutive points seperated by A_PTS and B_PTS,
+     * that cannot be contained in a circle with radius RADIUS1. (radius > RADIUS1)
+     * And if there exists a set of consecutive points seperated by A_PTS and B_PTS, 
+     * that can be contained in a circle with radius RADIUS2. (radius <= RADIUS2)
+     * If the points are colinear, the radius is half of the longest distance between the points.
+     * If the points are not colinear, the radius is the radius of the circumscribed circle using the Shoelace formula.
+     * RADIUS2 must be greater than 0.
+     * NUMPOINTS must be greater than or equal to 5.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.A_PTS, PARAMETERS.B_PTS, PARAMETERS.RADIUS1, PARAMETERS.RADIUS2.
+     * Returns: true if both conditions are met, false otherwise.
+     */
     public static boolean lic13(){
         if(NUMPOINTS < 5) return false;
         if(PARAMETERS.RADIUS2 <= 0) return false;
@@ -467,7 +480,6 @@ public class Decide {
         boolean condition2 = false;
 
         for (int i = 0; i <= NUMPOINTS - minPoints; i++) { 
-            //points
             double x1 = X[i];
             double x2 = X[i+PARAMETERS.A_PTS+1];
             double x3 = X[i+ PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
@@ -475,21 +487,15 @@ public class Decide {
             double y2 = Y[i+PARAMETERS.A_PTS+1];
             double y3 = Y[i+PARAMETERS.A_PTS+PARAMETERS.B_PTS+2];
             double radius;
-
-            //triangle sides
             double a = calculateDistance(x2, y2, x3, y3);
             double b = calculateDistance(x1, y1, x3, y3);
             double c = calculateDistance(x1, y1, x2, y2);
-
-            //calculate area of triangle
             double area = calculateTriangleArea(x1, y1, x2, y2, x3, y3);
 
-            //colinear case
             if (DOUBLECOMPARE(area, 0.0) == CompType.EQ) {
                 radius = 0.5 * Math.max(a,Math.max(b,c));
             }
             else{
-                //calculate radius of circumscribed circle
                 radius = a*b*c / (4*area);
             }
             if(radius > PARAMETERS.RADIUS1){ 
@@ -499,18 +505,26 @@ public class Decide {
                 condition2 = true;
             }
         }
-        if(condition1 && condition2) return true;
-        return false;
+        return condition1 && condition2;
     }
 
+    /**
+     * LIC 14: Area check
+     * Checks if there exists a set of consecutive points seperated by E_PTS and F_PTS, that has an area greater than AREA1. (area > AREA1)
+     * And if there exists a set of consecutive points seperated by E_PTS and F_PTS, that has an area less than AREA2. (area < AREA2)
+     * AREA2 must be equal to or greater than 0.
+     * NUMPOINTS must be greater than or equal to 5.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.E_PTS, PARAMETERS.F_PTS, PARAMETERS.AREA1, PARAMETERS.AREA2.
+     * Returns: true if both conditions are met, false otherwise.
+     */
     public static boolean lic14(){
         if(NUMPOINTS < 5) return false;
         if(PARAMETERS.AREA2 <= 0) return false;
         int minPoints = 3 + PARAMETERS.E_PTS + PARAMETERS.F_PTS;
         if(NUMPOINTS < minPoints) return false;
-        boolean condition1 = false; // area > AREA1
-        boolean condition2 = false; // area < AREA2
-
+        boolean condition1 = false;
+        boolean condition2 = false;
+        
         for (int i = 0; i <= NUMPOINTS - minPoints; i++) { 
 
             double x1 = X[i];

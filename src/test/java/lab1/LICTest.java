@@ -545,64 +545,76 @@ public class LICTest {
     }
 
     // //////////// LIC 13 ///////////
-
+    /**
+     * Contract: The LIC is met if three consecutive intervening points cannot fit in a circle with RADIUS1 but fits in a circle with RADIUS2.
+     * The three consecutive intervening points are (0,0), (1,0), (0.5,sqrt(3)/2).
+     * The radius of the circle that can contain the three points is R=0.577.
+     * Input: 5 points: (0,0), (99,99), (1,0), (99,99), (0.5, sqrt(3)/2). RADIUS1 = 0.5, RADIUS2 = 0.6.
+     * Output: True (0.5 < R ≈ 0.577 <= 0.6)
+     */
     @Test
-    @DisplayName("LIC 13 should be true when three consecutive interveningpoints cannot fit in a circle with RADIUS1 but fits in a circle with RADIUS2")
+    @DisplayName("LIC 13 should be true when three consecutive intervening points cannot fit in a circle with RADIUS1 but fits in a circle with RADIUS2")
     void testLic13Positive() {
-        // Setting up new test parameters
         Decide.PARAMETERS.RADIUS1 = 0.5;
         Decide.PARAMETERS.RADIUS2 = 0.6;
         Decide.PARAMETERS.A_PTS = 1;
         Decide.PARAMETERS.B_PTS = 1;
         Decide.NUMPOINTS = 5;
 
-        // With A_PTS=1 and B_PTS=1, lic13 uses points (0,2,4).
-        // Choose an equilateral triangle with side length 1:
-        // (0,0), (1,0), (0.5, sqrt(3)/2) has circumradius R = 1/sqrt(3) ≈ 0.57735
         Decide.X = new double[]{0.0, 99.0, 1.0, 99.0, 0.5};
         Decide.Y = new double[]{0.0, 99.0, 0.0, 99.0, Math.sqrt(3.0) / 2.0};
 
         assertTrue(Decide.lic13(), "Expected LIC13 to be true because 0.5 < R ≈ 0.577 <= 0.6");
     }
 
+    /**
+     * Contract: The LIC is not met if three consecutive intervening points CAN fit in a circle with RADIUS1 but CANNOT fit in a circle with RADIUS2.
+     * The three consecutive intervening points are (0,0), (1,0), (0.5,sqrt(3)/2)
+     * The radius of the circle that can contain the three points is R=0.577.
+     * Input: 5 points: (0,0), (99,99), (1,0), (99,99), (0.5, sqrt(3)/2). RADIUS1 = 0.5, RADIUS2 = 0.6.
+     * Output: False (R = 0.577 > RADIUS2 = 0.6)
+     */
+
     @Test
-    @DisplayName("LIC 13 should be false whencondition 1 is false and condition 2 is true")
+    @DisplayName("LIC 13 should be false when three consecutive intervening points CAN fit in a circle with RADIUS1 but CANNOT fit in a circle with RADIUS2")
     void testLic13Condition1FalseCondition2True() {
-        // Setting up new test parameters
         Decide.PARAMETERS.RADIUS1 = 0.58;
         Decide.PARAMETERS.RADIUS2 = 0.6;
-        Decide.PARAMETERS.A_PTS = 1;
-        Decide.PARAMETERS.B_PTS = 1;
         Decide.NUMPOINTS = 5;
 
-        // With A_PTS=1 and B_PTS=1, lic13 uses points (0,2,4).
-        // Choose an equilateral triangle with side length 1:
-        // (0,0), (1,0), (0.5, sqrt(3)/2) has circumradius R = 1/sqrt(3) ≈ 0.57735
         Decide.X = new double[]{0.0, 99.0, 1.0, 99.0, 0.5};
         Decide.Y = new double[]{0.0, 99.0, 0.0, 99.0, Math.sqrt(3.0) / 2.0};
 
         assertFalse(Decide.lic13(), "Expected LIC13 to be False because R ≈ 0.577 <= 0.6 && R <= 0.58");
     }
 
+    /**
+     * Contract: The LIC is not met if three consecutive intervening points CAN fit in a circle with RADIUS1 but CANNOT fit in a circle with RADIUS2.
+     * The three consecutive intervening points are (0,0), (1,0), (0.5,sqrt(3)/2).
+     * The radius of the circle that can contain the three points is R=0.577.
+     * Input: 5 points: (0,0), (99,99), (1,0), (99,99), (0.5, sqrt(3)/2). RADIUS1 = 0.5, RADIUS2 = 0.4.
+     * Output: False (R = 0.577 > RADIUS2 = 0.4)
+     */
     @Test
-    @DisplayName("LIC 13 should be false whencondition 1 is true and condition 2 is false")
+    @DisplayName("LIC 13 should be false when three consecutive intervening points CAN fit in a circle with RADIUS1 but CANNOT fit in a circle with RADIUS2")
     void testLic13Condition1TrueCondition2False() {
-        // Setting up new test parameters
         Decide.PARAMETERS.RADIUS1 = 0.5;
         Decide.PARAMETERS.RADIUS2 = 0.4;
-        Decide.PARAMETERS.A_PTS = 1;
-        Decide.PARAMETERS.B_PTS = 1;
         Decide.NUMPOINTS = 5;
 
-        // With A_PTS=1 and B_PTS=1, lic13 uses points (0,2,4).
-        // Choose an equilateral triangle with side length 1:
-        // (0,0), (1,0), (0.5, sqrt(3)/2) has circumradius R = 1/sqrt(3) ≈ 0.57735
         Decide.X = new double[]{0.0, 99.0, 1.0, 99.0, 0.5};
         Decide.Y = new double[]{0.0, 99.0, 0.0, 99.0, Math.sqrt(3.0) / 2.0};
 
         assertFalse(Decide.lic13(), "Expected LIC13 to be False because R ≈ 0.577 > 0.4");
     }
 
+    /**
+     * Contract: The LIC is not met if three consecutive intervening points CAN fit in a circle with RADIUS1 and CANNOT fit in a circle with RADIUS2.
+     * The three consecutive intervening points are (0,0), (99,99), (1,0).
+     * The radius of the circle that can contain the three points is R=0.577.
+     * Input: 5 points: (0,0), (99,99), (1,0), (99,99), (0.5, sqrt(3)/2). RADIUS1 = 0.6, RADIUS2 = 0.4.
+     * Output: False (R = 0.577 > RADIUS2 = 0.4) (RADIUS1 > R = 0.577)
+     */
     @Test
     @DisplayName("LIC 13 should be false when both conditions are false")
     void testLic13Negative() {
@@ -613,16 +625,17 @@ public class LICTest {
         Decide.PARAMETERS.B_PTS = 1;
         Decide.NUMPOINTS = 5;
 
-        // With A_PTS=1 and B_PTS=1, lic13 uses points (0,2,4).
-        // Choose an equilateral triangle with side length 1:
-        // (0,0), (1,0), (0.5, sqrt(3)/2) has circumradius R = 1/sqrt(3) ≈ 0.57735
         Decide.X = new double[]{0.0, 99.0, 1.0, 99.0, 0.5};
         Decide.Y = new double[]{0.0, 99.0, 0.0, 99.0, Math.sqrt(3.0) / 2.0};
 
         assertFalse(Decide.lic13(), "Expected LIC13 to be False because 0.4 < R ≈ 0.577 <= 0.6");
     }
 
-    
+    /**
+     * Contract: The LIC is not met if NUMPOINTS is less than 5.
+     * Input: NUMPOINTS = 4.
+     * Output: False (NUMPOINTS < 5)
+     */
     @Test
     @DisplayName("LIC 13 should be false when NUMPOINTS is less than 5")
     void testLic13NumpointsLessThan5() {
@@ -632,74 +645,65 @@ public class LICTest {
         assertFalse(Decide.lic13(), "Expected LIC13 to be False because numpoints < 5");
     }
 
+    /**
+     * Contract: The LIC is met if condition 1 and condition 2 are met by different sets of points.
+     * Set 1 (i=0): points at indices (0, 2, 4) - large triangle with radius > RADIUS1
+     * Set 2 (i=1): points at indices (1, 3, 5) - small triangle with radius <= RADIUS2
+     * Input: 6 points: (0,0), (10,0), (1.2,0), (10.8,0), (0.6, height1), (10.4, height2). RADIUS1 = 0.5, RADIUS2 = 0.6.
+     * Output: True (Set 1 (indices 0,2,4) has radius > 0.5, Set 2 (indices 1,3,5) has radius <= 0.6)
+     */
+
     @Test
     @DisplayName("LIC 13 should be true when condition 1 and condition 2 are met by different sets of points")
     void testLic13DifferentSets() {
-        // Setting up new test parameters
         Decide.PARAMETERS.RADIUS1 = 0.5;
         Decide.PARAMETERS.RADIUS2 = 0.6;
         Decide.PARAMETERS.A_PTS = 1;
         Decide.PARAMETERS.B_PTS = 1;
         Decide.NUMPOINTS = 6;
         
-        // With A_PTS=1 and B_PTS=1:
-        // Set 1 (i=0): points at indices (0, 2, 4) - large triangle with radius > RADIUS1
-        // Set 2 (i=1): points at indices (1, 3, 5) - small triangle with radius <= RADIUS2
-        
-        // Set 1: Equilateral triangle with side length 1.2
-        // Circumradius ≈ 0.693 > 0.5 
         double side1 = 1.2;
         double height1 = side1 * Math.sqrt(3.0) / 2.0;
         
-        // Set 2: Equilateral triangle with side length 0.8
-        // Circumradius ≈ 0.462 <= 0.6 
         double side2 = 0.8;
         double height2 = side2 * Math.sqrt(3.0) / 2.0;
         
-        // Points: [set1_p1, set2_p1, set1_p2, set2_p2, set1_p3, set2_p3]
-        // Set 1 (indices 0,2,4): (0,0), (1.2,0), (0.6, height1)
-        // Set 2 (indices 1,3,5): (10,0), (10.8,0), (10.4, height2)
-        Decide.X = new double[]{
-            0.0,           // Set 1, point 1 
-            10.0,          // Set 2, point 1 
-            side1,         // Set 1, point 2 
-            10.0 + side2,  // Set 2, point 2 
-            side1/2.0,     // Set 1, point 3
-            10.0 + side2/2.0  // Set 2, point 3 
-        };
-        Decide.Y = new double[]{
-            0.0,           // Set 1, point 1 
-            0.0,           // Set 2, point 1 
-            0.0,           // Set 1, point 2 
-            0.0,           // Set 2, point 2 
-            height1,       // Set 1, point 3
-            height2        // Set 2, point 3
-        };
+        Decide.X = new double[]{0.0, 10.0, side1, 10.0 + side2, side1/2.0, 10.0 + side2/2.0};
+        Decide.Y = new double[]{0.0, 0.0, 0.0, 0.0, height1, height2};
         
         assertTrue(Decide.lic13(), 
             "Expected LIC13 to be true: Set 1 (indices 0,2,4) has radius > 0.5, " +
             "Set 2 (indices 1,3,5) has radius <= 0.6");
     }
 
+    /**
+     * Contract: The LIC is able to handle colinear points. No division by zero occurs.
+     * Set points are colinear and their circumscribed circle has a radius of 0.55. (0,0), (0.55,0), (1.1,0).
+     * Input: 5 points: (0,0), (99,99), (0.55,0), (99,99), (0.55*2,0). RADIUS1 = 0.5, RADIUS2 = 0.6.
+     * Output: True (0.5 < R ≈ 0.55 <= 0.6)
+     */
     @Test
     @DisplayName("LIC 13 should be able to handle colinear points")
     void testLic13ColinearPoints() {
-        // Setting up new test parameters
         Decide.PARAMETERS.RADIUS1 = 0.5;
         Decide.PARAMETERS.RADIUS2 = 0.6;
         Decide.PARAMETERS.A_PTS = 1;
         Decide.PARAMETERS.B_PTS = 1;
         Decide.NUMPOINTS = 5;
 
-        // With A_PTS=1 and B_PTS=1, lic13 uses points (0,2,4).
-        // Pick points that are colinear and have a radius of 0.55
         Decide.X = new double[]{0.0, 99.0, 0.55, 99.0, 0.55*2};
-        Decide.Y = new double[]{0.0, 99.0, 0.0, 99.0, 0.0}; //all points have the same y coordinate
+            Decide.Y = new double[]{0.0, 99.0, 0.0, 99.0, 0.0}; //all points have the same y coordinate
 
         assertTrue(Decide.lic13(), "Expected LIC13 to be true because 0.5 < R ≈ 0.55 <= 0.6");
     }
     // //////////// LIC 14 ///////////
 
+    /**
+     * Contract: The LIC should be true when area is greater than AREA1 and less than AREA2.
+     * set (0,0), (1.0,5.0), (1.0,2.0) will give an area = 1.5
+     * Input: 5 points: (0,0), (0.5,0), (1.0,0), (1.0,1.0), (1.0,2.0). AREA1 = 1.0, AREA2 = 2.0.
+     * Output: True (AREA1 = 1.0 < area = 1.5 < AREA2 = 2.0)
+     */
     @Test
     @DisplayName("LIC 14 should be true when area is greater than AREA1 and less than AREA2")
     void testLic14Positive() {
@@ -709,12 +713,17 @@ public class LICTest {
         Decide.PARAMETERS.AREA1 = 1.0;
         Decide.PARAMETERS.AREA2 = 2.0;
 
-        //indices: 0, 2, 4 will be checked. The set will give an area = 1.5
         Decide.X = new double[]{0.0, 0.5, 1.0, 1.0, 1.0}; 
         Decide.Y = new double[]{0.0, 0.0, 5.0, 0.5, 2.0};
 
         assertTrue(Decide.lic14(), "Expected Lic 14 to be true: when AREA1 = 1.0 < area = 1.5 < AREA2 = 2.0");
     }
+    /**
+     * Contract: The LIC should be false when area is less than AREA1.
+     * set (0,0), (1.0,5.0), (1.0,2.0) will give an area = 1.5
+     * Input: 5 points: (0,0), (0.5,0), (1.0,0), (1.0,1.0), (1.0,2.0). AREA1 = 1.0, AREA2 = 2.0.
+     * Output: False (AREA1 = 1.0 < area = 1.5)
+     */
     @Test
     @DisplayName("LIC 14 should be false when area is less than AREA1")
     void testLic14Condition1False() {
@@ -724,14 +733,20 @@ public class LICTest {
         Decide.PARAMETERS.AREA1 = 1.5;
         Decide.PARAMETERS.AREA2 = 2.0;
 
-        //indices: 0, 2, 4 will be checked. The set will give an area = 1.5
         Decide.X = new double[]{0.0, 0.5, 1.0, 1.0, 1.0}; 
         Decide.Y = new double[]{0.0, 0.0, 5.0, 0.5, 2.0};
 
         assertFalse(Decide.lic14(), "Expected Lic 14 to be false: when AREA1 >= area ");
     }
+
+    /**
+     * Contract: The LIC should be false when area is equal to or greater than AREA2.
+     * set (0,0), (1.0,5.0), (1.0,2.0) will give an area = 1.5
+     * Input: 5 points: (0,0), (0.5,0), (1.0,0), (1.0,1.0), (1.0,2.0). AREA1 = 1.0, AREA2 = 2.0.
+     * Output: False (AREA1 = 1.5 = area = 1.5)
+     */
     @Test
-    @DisplayName("LIC 14 should be false when area is less than AREA1")
+    @DisplayName("LIC 14 should be false when area is greater than AREA2")
     void testLic14Condition2False() {
         Decide.NUMPOINTS = 5;
         Decide.PARAMETERS.E_PTS = 1; 
@@ -739,12 +754,17 @@ public class LICTest {
         Decide.PARAMETERS.AREA1 = 1.0;
         Decide.PARAMETERS.AREA2 = 1.5;
 
-        //indices: 0, 2, 4 will be checked. The set will give an area = 1.5
         Decide.X = new double[]{0.0, 0.5, 1.0, 1.0, 1.0}; 
         Decide.Y = new double[]{0.0, 0.0, 5.0, 0.5, 2.0};
 
         assertFalse(Decide.lic14(), "Expected Lic 14 to be false: when AREA2 <= area ");
     }
+    /**
+     * Contract: The LIC should be false when area is less than AREA1.
+     * set (0,0), (1.0,5.0), (1.0,2.0) will give an area = 1.5
+     * Input: 5 points: (0,0), (0.5,0), (1.0,0), (1.0,1.0), (1.0,2.0). AREA1 = 2.0, AREA2 = 1.0.
+     * Output: False (AREA1 = 2.0 > area = 1.5)
+     */
     @Test
     @DisplayName("LIC 14 should be false when area is less than AREA1")
     void testLic14Negative() {
@@ -754,14 +774,21 @@ public class LICTest {
         Decide.PARAMETERS.AREA1 = 2.0;
         Decide.PARAMETERS.AREA2 = 1.0;
 
-        //indices: 0, 2, 4 will be checked. The set will give an area = 1.5
         Decide.X = new double[]{0.0, 0.5, 1.0, 1.0, 1.0}; 
         Decide.Y = new double[]{0.0, 0.0, 5.0, 0.5, 2.0};
 
         assertFalse(Decide.lic14(), "Expected Lic 14 to be false: when AREA2 <= area and AREA1 >= area");
     }
+
+    /**
+     * Contract: The LIC should be true when area is greater than AREA1 and less than AREA2.
+     * indices: 0, 2, 4 will be checked for condition 1. The set will give an area1 = 1.5
+     * indices: 1, 3, 5 will be checked for condition 2. The set will give an area2 = 3.375
+     * Input: 5 points: (0,0), (0.5,0), (1.0,0), (1.0,1.0), (1.0,2.0). AREA1 = 2.0, AREA2 = 1.0.
+     * Output: True (AREA1 = 1.0 < area1 = 1.5 < AREA2  && AREA1 < area2 = 3.375 < AREA2 = 0.5)
+     */
     @Test
-    @DisplayName("LIC 14 should be false when area is less than AREA1")
+    @DisplayName("LIC 14 should be true conditions are met by different sets of points")
     void testLic14PositiveDifferentSets() {
         Decide.NUMPOINTS = 6;
         Decide.PARAMETERS.E_PTS = 1; 
@@ -769,14 +796,17 @@ public class LICTest {
         Decide.PARAMETERS.AREA1 = 1.0;
         Decide.PARAMETERS.AREA2 = 0.5;
 
-        //indices: 0, 2, 4 will be checked for condition 1. The set will give an area1 = 1.5
-        //indices: 1, 3, 5 will be checked for condition 2. The set will give an area2 = 3.375
         Decide.X = new double[]{0.0, 0.5, 1.0, 1.0, 1.0, 0.5}; 
         Decide.Y = new double[]{0.0, 0.0, 5.0, 0.5, 2.0, 1.5};
 
         assertTrue(Decide.lic14(), "Expected Lic 14 to be true: when AREA1 = 1.0 < area1 = 1.5  && area2 = 3.375 < AREA2 = 0.5");
     }
 
+    /**
+     * Contract: The LIC should be false when NUMPOINTS is less than 5.
+     * Input: NUMPOINTS = 4.
+     * Output: False (NUMPOINTS < 5)
+     */
     @Test
     @DisplayName("LIC 14 should be false when NUMPOINTS < 5")
     void testLic14InsufficientPoints() {
@@ -785,6 +815,11 @@ public class LICTest {
         assertFalse(Decide.lic14(), "Expected Lic 14 to be false when NUMPOINTS < 5");
     }
 
+    /**
+     * Contract: The LIC should be false when AREA2 is less than 0.
+     * Input: AREA2 = -1.0.
+     * Output: False (AREA2 < 0)
+     */
     @Test
     @DisplayName("LIC 14 should be false when AREA =< 0")
     void testLic14Area2Negative() {
