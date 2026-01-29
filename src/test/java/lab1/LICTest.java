@@ -19,6 +19,10 @@ public class LICTest {
 
     // //////////// LIC 0  ///////////
 
+    /*
+    Unit test when computing LIC0 method with a valid input. Valid input is LENGHT1 ≥ 0.
+    This tests when the distance between two consecutive points are greater than LENGHT1, which should return true.
+     */
     @Test
     @DisplayName("LIC 0 should be true when distance is greater than LENGTH1")
     void testLic0Positive() {
@@ -31,6 +35,10 @@ public class LICTest {
         assertTrue(Decide.lic0(), "Expected LIC0 to be true when distance > LENGTH1");
     }
 
+    /*
+    Unit test when computing LIC0 method with a valid input. Valid input is LENGHT1 ≥ 0.
+    This tests when the distance between two consecutive points are smaller than LENGHT1, which should return false.
+     */
     @Test
     @DisplayName("LIC 0 should be false when distance is smaller than LENGTH1")
     void testLic0Negative() {
@@ -41,6 +49,22 @@ public class LICTest {
         Decide.Y = new double[]{0.0, 0.0, 0.0};
 
         assertFalse(Decide.lic0(), "Expected LIC0 to be false when all distances <= LENGTH1");
+    }
+
+    /*
+    Unit test when computing LIC0 method with an invalid input should return false.
+    Invalid input is LENGHT1 < 0.
+     */
+    @Test
+    @DisplayName("LIC 0 should be false when LENGTH1 < 0 (invalid)")
+    void testLic0InvalidInput() {
+        // Setting up new test parameters
+        Decide.PARAMETERS.LENGTH1 = -1.0;
+        Decide.NUMPOINTS = 3;
+        Decide.X = new double[]{0.0, 5.0, 9.0}; 
+        Decide.Y = new double[]{0.0, 0.0, 0.0};
+
+        assertFalse(Decide.lic0(), "Expected LIC0 to be false when input is invalid");
     }
 
     // //////////// LIC 1  ///////////
