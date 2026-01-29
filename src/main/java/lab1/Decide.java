@@ -186,7 +186,17 @@ public class Decide {
         return false;
     }
 
+    /*
+    This function checks if there are at least one set of three consecutive data points that form an angle such that:
+    1. angle < (PI−EPSILON)
+    2. angle > (PI + EPSILON)
+    The angle is of the secon point (=vertex). If the following requirements of the measured angle are met, the method returns true. 
+    Otherwise it returns false, even for invalid data (EPSILON < 0 or EPSILON > PI), and if the rest of the points coincide with vertex.
+     */
     public static boolean lic2() {
+        if(PARAMETERS.EPSILON < 0 || PARAMETERS.EPSILON > PI) {
+            return false;
+        }
         for(int i = 0; i < NUMPOINTS - 2; i++) {
             double x1 = X[i], x2 = X[i + 1];
             double x3 = X[i + 2], y1 = Y[i];
