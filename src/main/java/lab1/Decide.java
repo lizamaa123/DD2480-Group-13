@@ -109,18 +109,25 @@ public class Decide {
 
     // //////////// LIC'S  ///////////
 
+    /**
+     * LIC 0: Distance Check.
+     * Checks if there exists at least one set of two consecutive data points that are 
+     * a distance greater than the length, LENGTH1, apart ((dist > LENGTH1).
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.LENGTH1.
+     * Returns: true if the condition is met, false otherwise.
+     */
     public static boolean lic0() {
+        if(PARAMETERS.LENGTH1 < 0) {
+            return false;
+        }
         for(int i = 0; i < NUMPOINTS - 1; i++) {
-            // consecutive data points e.g. (X[i],Y[i]) and (X[i+1],Y[i+1]) <-- from Glossary in assignment.
             double x1 = X[i];
             double x2 = X[i+1];
             double y1 = Y[i];
             double y2 = Y[i+1];
             
-            // Euclidean distance measurement
             double distance = calculateDistance(x1, y1, x2, y2);
 
-            // condition
             if(distance > PARAMETERS.LENGTH1) {
               return true;
             }
@@ -128,7 +135,19 @@ public class Decide {
         return false;
     }
   
+    /**
+     * LIC 1: Radius Check.
+     * Checks if there exists at least one set of three consecutive data points that 
+     * cannot be contained within or on a circle of radius RADIUS1.
+     * Conditions to check pythagorean inequality, with the longest side being the diameter = 2 x radius
+     * (also avoids zero division in radius on the else-block)
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.RADIUS1.
+     * Returns: true if the condition is met, false otherwise.
+     */
     public static boolean lic1() {
+        if(PARAMETERS.LENGTH1 < 0) {
+            return false;
+        }
         for(int i = 0; i < NUMPOINTS - 2; i++) {
             double x1 = X[i];
             double x2 = X[i + 1];
@@ -137,17 +156,12 @@ public class Decide {
             double y2 = Y[i + 1];
             double y3 = Y[i + 2];
 
-            // Distance between (x1,y1) and (x2,y2)
             double distance_a = calculateDistance(x1, y1, x2, y2);
-            // Distance between (x2,y2) and (x3,y3)
             double distance_b = calculateDistance(x2, y2, x3, y3);
-            // Distance between (x1,y1) and (x3,y3)
             double distance_c = calculateDistance(x1, y1, x3, y3);
 
             double radius;
 
-            // Conditions to check pythagorean inequality, with the longest side being the diameter = 2 x radius
-            // (also avoids zero division in radius on the else-block)
             if(Math.pow(distance_a, 2) + Math.pow(distance_b, 2) <= Math.pow(distance_c, 2)) {
                 radius = distance_c / 2;
             }
@@ -169,19 +183,28 @@ public class Decide {
         return false;
     }
 
+    /**
+     * LIC 2: Angle Check.
+     * Checks (with cosine similarity) if there exists at least one set of three consecutive data points which 
+     * form an angle such that: angle < (PI - EPSILON) or angle > (PI + EPSILON). 
+     * The second point of the set is always the vertex of the angle.
+     * Method skips if the other point coincides with vertex.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.EPSILON.
+     * Returns: true if the condition is met, false otherwise.
+     */
     public static boolean lic2() {
+        if(PARAMETERS.EPSILON < 0 || PARAMETERS.EPSILON > PI) {
+            return false;
+        }
         for(int i = 0; i < NUMPOINTS - 2; i++) {
             double x1 = X[i], x2 = X[i + 1];
             double x3 = X[i + 2], y1 = Y[i];
             double y2 = Y[i + 1], y3 = Y[i + 2];
 
-            // Handling if points coincide with vertex (=second point)
             if((x1 == x2 && y1 == y2) || (x3 == x2 && y3 == y2)) {
-                // skip
                 continue;
             }
 
-            // Cosine similarity formula (only measuring vertex)
             double vector_ab_x = x2 - x1, vector_ab_y = y2 - y1;
             double vector_bc_x = x2 - x3, vector_bc_y = y2 - y3;
 
@@ -199,7 +222,18 @@ public class Decide {
         return false;
     }
 
+    /**
+     * LIC 3: Triangle Area Check.
+     * Checks if there exists at least one set of three consecutive data points that are 
+     * the vertices of a triangle with area greater than AREA1.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.AREA1.
+     * Returns: true if the condition is met, false otherwise.
+     */
     public static boolean lic3() {
+        if(PARAMETERS.AREA1 < 0) {
+            return false;
+        }
+
         for(int i = 0; i < NUMPOINTS - 2; i++) {
             double x1 = X[i], x2 = X[i + 1];
             double x3 = X[i + 2], y1 = Y[i];
