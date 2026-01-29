@@ -109,10 +109,12 @@ public class Decide {
 
     // //////////// LIC'S  ///////////
 
-    /*
-    This function measures the Euclidean distance between two consecutive points, i.e (X[i],Y[i]) and (X[i+1],Y[i+1]).
-    If the distance is greater than LENGHT1, the method returns true. Otherwise, it returns false - even for invalid data (LENGHT1 < 0).
-    The function uses a helper method to calculate the Euclidean distance: calculateDistance()
+    /**
+     * LIC 0: Distance Check.
+     * Checks if there exists at least one set of two consecutive data points that are 
+     * a distance greater than the length, LENGTH1, apart ((dist > LENGTH1).
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.LENGTH1.
+     * Returns: true if the condition is met, false otherwise.
      */
     public static boolean lic0() {
         if(PARAMETERS.LENGTH1 < 0) {
@@ -136,11 +138,12 @@ public class Decide {
         return false;
     }
   
-    /*
-    This function checks if there are at least one set of three consecutive data points that canotn be contained within or on a circle with RADIUS1.
-    If the measured sides of the triangle (of the three data points) are greater than RADIUS1, the method returns true. 
-    Otherwise it returns false, even for invalid data (RADIUS1 < 0).
-    The function uses a helper method to calculate the Euclidean distance: calculateDistance()
+    /**
+     * LIC 1: Radius Check.
+     * Checks if there exists at least one set of three consecutive data points that 
+     * cannot be contained within or on a circle of radius RADIUS1.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.RADIUS1.
+     * Returns: true if the condition is met, false otherwise.
      */
     public static boolean lic1() {
         if(PARAMETERS.LENGTH1 < 0) {
@@ -186,12 +189,13 @@ public class Decide {
         return false;
     }
 
-    /*
-    This function checks if there are at least one set of three consecutive data points that form an angle such that:
-    1. angle < (PI−EPSILON)
-    2. angle > (PI + EPSILON)
-    The angle is of the secon point (=vertex). If the following requirements of the measured angle are met, the method returns true. 
-    Otherwise it returns false, even for invalid data (EPSILON < 0 or EPSILON > PI), and if the rest of the points coincide with vertex.
+    /**
+     * LIC 2: Angle Check.
+     * Checks if there exists at least one set of three consecutive data points which 
+     * form an angle such that: angle < (PI - EPSILON) or angle > (PI + EPSILON). 
+     * The second point of the set is always the vertex of the angle.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.EPSILON.
+     * Returns: true if the condition is met, false otherwise.
      */
     public static boolean lic2() {
         if(PARAMETERS.EPSILON < 0 || PARAMETERS.EPSILON > PI) {
@@ -226,12 +230,12 @@ public class Decide {
         return false;
     }
 
-    /*
-    This function checks if there are at least one set of three consecutive data points that create a triangle with
-    an area greater than AREA1. 
-    If the measured area (of the three data points) are greater than AREA1, the method returns true. 
-    Otherwise it returns false, even for invalid data (AREA1 < 0).
-    The function uses a helper method to calculate the the triangle are: calculateTriangleArea()
+    /**
+     * LIC 3: Triangle Area Check.
+     * Checks if there exists at least one set of three consecutive data points that are 
+     * the vertices of a triangle with area greater than AREA1.
+     * Inputs: Global variables X, Y, NUMPOINTS, PARAMETERS.AREA1.
+     * Returns: true if the condition is met, false otherwise.
      */
     public static boolean lic3() {
         if(PARAMETERS.AREA1 < 0) {

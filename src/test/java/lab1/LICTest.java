@@ -19,9 +19,10 @@ public class LICTest {
 
     // //////////// LIC 0  ///////////
 
-    /*
-    Unit test when computing LIC0 method with a valid input. Valid input is LENGHT1 ≥ 0.
-    This tests when the distance between two consecutive points are greater than LENGHT1, which should return true.
+    /**
+     * Contract: The function must return true if the distance between any two consecutive points is greater than LENGTH1.
+     * Input: NUMPOINTS = 2 with distance = 11.0, LENGTH1 = 10.0.
+     * Output: True
      */
     @Test
     @DisplayName("LIC 0 should be true when distance is greater than LENGTH1")
@@ -35,9 +36,10 @@ public class LICTest {
         assertTrue(Decide.lic0(), "Expected LIC0 to be true when distance > LENGTH1");
     }
 
-    /*
-    Unit test when computing LIC0 method with a valid input. Valid input is LENGHT1 ≥ 0.
-    This tests when the distance between two consecutive points are smaller than LENGHT1, which should return false.
+    /**
+     * Contract: The function must return false if the distance between all consecutive points is less than or equal to LENGTH1.
+     * Input: NUMPOINTS = 3. All distances <= 5.0, LENGTH1 = 10.0.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 0 should be false when distance is smaller than LENGTH1")
@@ -51,9 +53,10 @@ public class LICTest {
         assertFalse(Decide.lic0(), "Expected LIC0 to be false when all distances <= LENGTH1");
     }
 
-    /*
-    Unit test when computing LIC0 method with an invalid input should return false.
-    Invalid input is LENGHT1 < 0.
+    /**
+     * Contract: The function must return false if the input parameter LENGTH1 is invalid (LENGHT1 < 0).
+     * Input: LENGTH1 = -1.0.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 0 should be false when LENGTH1 < 0 (invalid)")
@@ -69,9 +72,10 @@ public class LICTest {
 
     // //////////// LIC 1  ///////////
 
-    /*
-    Unit test when computing LIC1 method with a valid input. Valid input is RADIUS1 ≥ 0.
-    This tests if a set of three consecutive data points cannot be contained wihtin or on a circle with RADIUS1, which should return true.
+    /**
+     * Contract: The function must return true if three consecutive points CANNOT be contained within or on a circle of radius RADIUS1.
+     * Input: NUMPOINTS = 3. Three points forming a triangle that needs radius > 1.0, RADIUS1 = 1.0.
+     * Output: True
      */
     @Test
     @DisplayName("LIC 1 should be true when radius is greater than RADIUS1")
@@ -85,9 +89,10 @@ public class LICTest {
         assertTrue(Decide.lic1(), "Expected LIC1 to be true when radius > RADIUS1");
     }
 
-    /*
-    Unit test when computing LIC1 method with a valid input. Valid input is RADIUS1 ≥ 0.
-    This tests if a set of three consecutive data points can be contained wihtin or on a circle with RADIUS1, which should return false.
+    /**
+     * Contract: The function must return false if all sets of three consecutive points CAN be contained within or on a circle of radius RADIUS1.
+     * Input: NUMPOINTS = 3. Three points fitting in radius 2.0, RADIUS1 = 10.0.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 1 should be false when radius is smaller than RADIUS1")
@@ -101,9 +106,10 @@ public class LICTest {
         assertFalse(Decide.lic1(), "Expected LIC1 to be false when all radius <= RADIUS1");
     }
 
-    /*
-    Unit test when computing LIC1 method with an invalid input should return false.
-    Invalid input is RADIUS1 < 0.
+    /**
+     * Contract: The function must return false if the input parameter RADIUS1 is invalid (RADIUS1 < 0).
+     * Input: RADIUS1 = -1.0.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 1 should be false when RADIUS1 < 0 (invalid)")
@@ -119,12 +125,10 @@ public class LICTest {
 
     // //////////// LIC 2  ///////////
 
-    /*
-    Unit test when computing LIC2 method with a valid input. Valid input is 0 ≤ EPSILON < PI.
-    This tests if a set of three consecutive data points can form an angle such that:
-    1. angle < (PI−EPSILON) 
-    2. angle > (PI + EPSILON)
-    , which should return true
+    /**
+     * Contract: The function must return true if there exists a set of three consecutive points forming an angle < (PI - EPSILON) or > (PI + EPSILON).
+     * Input: NUMPOINTS = 3. Three points forming a 90 degree angle (=PI/2), EPSILON = 0.0.
+     * Output: True
      */
     @Test
     @DisplayName("LIC 2 should be true when angle (90 = pi/2) is smaller than PI - EPSILON")
@@ -138,12 +142,10 @@ public class LICTest {
         assertTrue(Decide.lic2(), "Expected LIC2 to be true for 90 degree angle");
     }
 
-    /*
-    Unit test when computing LIC2 method with a valid input. Valid input is 0 ≤ EPSILON < PI.
-    This tests if a set of three consecutive data points cannot form an angle such that:
-    1. angle < (PI−EPSILON) 
-    2. angle > (PI + EPSILON)
-    , which should return false. E.g., a straight line.
+    /**
+     * Contract: The function must return false if no set of three consecutive points forms an angle < (PI - EPSILON) or > (PI + EPSILON).
+     * Input: NUMPOINTS = 3. Three points forming a straight line (= 180 degrees = PI), EPSILON = 0.1.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 2 should be false for a straight line (angle is 180 = pi)")
@@ -157,11 +159,10 @@ public class LICTest {
         assertFalse(Decide.lic2(), "Expected LIC2 to be false for a straight line");
     }
 
-    /*
-    Unit test when computing LIC2 method with an invalid input should return false.
-    Invalid input is when:
-    1. EPSILON < 0 - resulting in a negative tolerance which is not valid
-    2. EPSILON > PI - resulting in an invalid angle (requires an angle < 0 or > 2*PI)
+    /**
+     * Contract: The function must return false if the input parameter EPSILON is invalid (EPSILON < 0 or EPSILON >= PI).
+     * Input: NUMPOINTS = 3. EPSILON = 4.0.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 2 should be false when EPSILON > PI (invalid)")
@@ -177,9 +178,10 @@ public class LICTest {
 
     // //////////// LIC 3  ///////////
 
-    /*
-    Unit test when computing LIC3 method with a valid input. Valid input is AREA1 ≥ 0.
-    This tests if a set of three consecutive data points can create an area greater than AREA1, which should return true.
+    /**
+     * Contract: The function must return true if there exists a triangle formed by three consecutive points with area greater than AREA1.
+     * Input: NUMPOINTS = 3. Triangle area > 0.2, AREA1 = 0.2.
+     * Output: True
      */
     @Test
     @DisplayName("LIC 3 should be true when area is bigger than AREA1")
@@ -193,9 +195,10 @@ public class LICTest {
         assertTrue(Decide.lic3(), "Expected LIC3 to be true for area > AREA1");
     }
 
-    /*
-    Unit test when computing LIC3 method with a valid input. Valid input is AREA1 ≥ 0.
-    This tests if a set of three consecutive data points cannot create an area greater than AREA1, which should return false.
+    /**
+     * Contract: The function must return false if the area of all triangles formed by three consecutive points is less than or equal to AREA1.
+     * Input: NUMPOINTS = 3. Triangle area < 5.0, AREA1 = 5.0.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 3 should be false when area is smaller than AREA1")
@@ -209,9 +212,10 @@ public class LICTest {
         assertFalse(Decide.lic3(), "Expected LIC3 to be false for area < AREA1");
     }
 
-    /*
-    Unit test when computing LIC3 method with an invalid input should return false.
-    Invalid input is AREA1 < 0.
+    /**
+     * Contract: The function must return false if the input parameter AREA1 is invalid (less than 0).
+     * Input: NUMPOINTS = 3. AREA1 = -5.0.
+     * Output: False
      */
     @Test
     @DisplayName("LIC 3 should be false when AREA1 < 0 (invalid)")
