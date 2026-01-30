@@ -2,7 +2,6 @@ package lab1;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -445,21 +444,48 @@ public class LICTest {
     }
 
     // //////////// LIC 7  ///////////
-
+    /*
+    * Contract: Method should return false if the input parameter NUMPOINTS is invalid (NUMPOINTS >= 3)
+    * Inputs: NUMPOINTS = 2; K_PTS = 1; LENGTH1 = 1; X = {1.0, 2.0, 3.0}; Y = {1.0, 2.0, 3.0}
+    * Output: false
+    */
     @Test
     @DisplayName("Lic 7 should be false when NUMPOINTS is less than 3")
-    void testLic7Negative() {
+    void testLic7InputNegative() {
         Decide.NUMPOINTS = 2;
         Decide.PARAMETERS.K_PTS = 1;
+        Decide.PARAMETERS.LENGTH1 = 1;
         Decide.X = new double[]{1.0, 2.0, 3.0};
         Decide.Y = new double[]{1.0, 2.0, 3.0};
 
         assertFalse(Decide.lic3(), "Expected Lic 7 to be false when NUMPOINTS < 3");
     }
 
+    /*
+    * Contract: Method should return false if the distance between the data points is less than LENGTH1 (distance = sqrt(8))
+    * Inputs: NUMPOINTS = 3; K_PTS = 1; LENGTH1 = 3; X = {1.0, 2.0, 3.0}; Y = {1.0, 2.0, 3.0}
+    * Output: false
+    */
+    @Test
+    @DisplayName("Lic 7 should be false when distance is less than LENGTH1")
+    void testLic7ValueNegative() {
+        Decide.NUMPOINTS = 3;
+        Decide.PARAMETERS.K_PTS = 1;
+        Decide.PARAMETERS.LENGTH1 = 3;
+        Decide.X = new double[]{1.0, 2.0, 3.0};
+        Decide.Y = new double[]{1.0, 2.0, 3.0};
+
+        assertFalse(Decide.lic7(), "Expected Lic 7 to be false when d < LENGTH1");
+    }
+
+    /*
+    * Contract: Method should return true if the distance between the data points is greater than LENGTH1 (distance = sqrt(8))
+    * Inputs: NUMPOINTS = 3; K_PTS = 1; LENGTH1 = 1; X = {1.0, 2.0, 3.0}; Y = {1.0, 2.0, 3.0}
+    * Output: true
+    */
     @Test
     @DisplayName("Lic 7 should be true when distance is greater than LENGTH1")
-    void testLic7Positive() {
+    void testLic7ValuePositive() {
         Decide.NUMPOINTS = 3;
         Decide.PARAMETERS.K_PTS = 1;
         Decide.PARAMETERS.LENGTH1 = 1;
@@ -470,34 +496,85 @@ public class LICTest {
     }
 
     // //////////// LIC 8  ///////////
+    /*
+    * Contract: Method should return false if the input NUMPOINTS is invalid (NUMPOINTS >= 5)
+    * Inputs: NUMPOINTS = 4; A_PTS = 1; B_PTS = 1; RADIUS1 = 1; X = {0.0, 0.0, 0.0, 0.0, 2.0}; Y = {0.0, 0.0, 2.0, 0.0, 0.0}
+    * Output: false
+    */
+    @Test
+    @DisplayName("Lic 8 should be false when NUMPOINTS is less than 5")
+    void testLic8InputNegative() {
+        Decide.PARAMETERS.RADIUS1 = 1.0;
+        Decide.NUMPOINTS = 4;
+        Decide.PARAMETERS.A_PTS = 1;
+        Decide.PARAMETERS.B_PTS = 1;
+        Decide.X = new double[]{0.0, 0.0, 0.0, 0.0, 2.0};
+        Decide.Y = new double[]{0.0, 0.0, 2.0, 0.0, 0.0};
 
+        assertFalse(Decide.lic8(), "Expected Lic 8 to be false for radius <= RADIUS1");
+    }
+
+    /*
+    * Contract: Method should return true if the triangle can fit in/on a circle with radius RADIUS1 (longest side of triangle is sqrt(8) which divided by 2 is greater than RADIUS1)
+    * Inputs: NUMPOINTS = 5; A_PTS = 1; B_PTS = 1; RADIUS1 = 1; X = {0.0, 0.0, 0.0, 0.0, 2.0}; Y = {0.0, 0.0, 2.0, 0.0, 0.0}
+    * Output: true
+    */
     @Test
     @DisplayName("Lic 8 should be true when radius is greater than RADIUS1")
-    void testLic8Positive() {
+    void testLic8ValuePositive() {
         Decide.PARAMETERS.RADIUS1 = 1.0;
         Decide.NUMPOINTS = 5;
-        Decide.X = new double[]{0.0, 1.0, 0.0, 2.0, 0.0};
-        Decide.Y = new double[]{0.0, 0.0, 1.0, 0.0, 2.0};
+        Decide.PARAMETERS.A_PTS = 1;
+        Decide.PARAMETERS.B_PTS = 1;
+        Decide.X = new double[]{0.0, 0.0, 0.0, 0.0, 2.0};
+        Decide.Y = new double[]{0.0, 0.0, 2.0, 0.0, 0.0};
 
         assertTrue(Decide.lic8(), "Expected Lic 8 to be true for radius > RADIUS1");
     }
-
-    @Test
+    /*
+    * Contract: Method should return false if the triangle cannot fit in/on a circle with radius RADIUS1 (longest side of triangle is sqrt(8) which divided by 2 is less than RADIUS1)
+    * Inputs: NUMPOINTS = 4; A_PTS = 1; B_PTS = 1; RADIUS1 = 2; X = {0.0, 0.0, 0.0, 0.0, 2.0}; Y = {0.0, 0.0, 2.0, 0.0, 0.0}
+    * Output: false
+    */
     @DisplayName("Lic 8 should be false when radius is less than or equal to RADIUS1")
-    void testLic8Negative() {
-        Decide.PARAMETERS.RADIUS1 = 1.0;
+    void testLic8ValueNegative() {
+        Decide.PARAMETERS.RADIUS1 = 2.0;
         Decide.NUMPOINTS = 5;
-        Decide.X = new double[]{0.0, 0.0, 2.5, 0.0, 0.0};
-        Decide.Y = new double[]{0.0, 0.0, 0.0, 0.0, 2.5};
+        Decide.PARAMETERS.A_PTS = 1;
+        Decide.PARAMETERS.B_PTS = 1;
+        Decide.X = new double[]{0.0, 0.0, 0.0, 0.0, 2.0};
+        Decide.Y = new double[]{0.0, 0.0, 2.0, 0.0, 0.0};
 
-        assertTrue(Decide.lic8(), "Expected Lic 8 to be false for radius <= RADIUS1");
+        assertFalse(Decide.lic8(), "Expected Lic 8 to be false for radius <= RADIUS1");
     }
 
     // //////////// LIC 9  ///////////
+    /*
+    * Contract: Method should return false when input NUMPOINTS is invalid (NUMPOINTS >= 5)
+    * Inputs: NUMPOINTS = 4; C_PTS = 1; D_PTS = 1; EPSILON = 0.1; X = {0.0, 0.5, 1.0, 1.0, 1.0}, Y = {0.0, 0.0, 0.0, 0.5, 1.0}
+    * Output: false
+     */
+    @Test
+    @DisplayName("Lic 9 should be false when NUMPOINTS < 5")
+    void testLic9InputNegative(){
+        Decide.NUMPOINTS = 4;
+        Decide.PARAMETERS.C_PTS = 1;
+        Decide.PARAMETERS.D_PTS = 1;
+        Decide.PARAMETERS.EPSILON = 0.1;
+        Decide.X = new double[]{0.0, 0.5, 1.0, 1.0, 1.0};
+        Decide.Y = new double[]{0.0, 0.0, 0.0, 0.5, 1.0};
 
+        assertFalse(Decide.lic9(), "Expected Lic 9 to be false for NUMPOINTS < 5");
+    }
+
+    /*
+    * Contract: Method should return false when angle between the points is a straight line (angle is 180 degrees)
+    * Inputs: NUMPOINTS = 5; C_PTS = 1; D_PTS = 1; EPSILON = 0.1; X = {0.0, 0.5, 1.0, 1.5, 2.0}, Y = {0.0, 0.0, 0.0, 0.0, 0.0}
+    * Output: false
+     */
     @Test
     @DisplayName("Lic 9 should be false when angle is greater than pi - epsilon, or less than pi + epsilon")
-    void testLic9Negative() {
+    void testLic9ValueNegative() {
         Decide.NUMPOINTS = 5;
         Decide.PARAMETERS.C_PTS = 1;
         Decide.PARAMETERS.D_PTS = 1;
@@ -506,12 +583,16 @@ public class LICTest {
         Decide.Y = new double[]{0.0, 0.0, 0.0, 0.0, 0.0};
         
         assertFalse(Decide.lic9(), "Expected Lic 9 to be false for a straight line");
-
     }
 
+    /*
+    * Contract: Method should return true when angle between the points is not a straight line (angle is 90 degrees)
+    * Inputs: NUMPOINTS = 5; C_PTS = 1; D_PTS = 1; EPSILON = 0.1; X = {0.0, 0.5, 1.0, 1.0, 1.0}, Y = {0.0, 0.0, 0.0, 0.5, 1.0}
+    * Output: true
+     */
     @Test
     @DisplayName("Lic 9 should be positive when angle is less than pi - epsilon, or greater than pi + epsilon")
-    void testLic9Positive(){
+    void testLic9ValuePositive(){
         Decide.NUMPOINTS = 5;
         Decide.PARAMETERS.C_PTS = 1;
         Decide.PARAMETERS.D_PTS = 1;

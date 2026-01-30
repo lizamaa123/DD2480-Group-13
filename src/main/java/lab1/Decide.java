@@ -342,9 +342,15 @@ public class Decide {
         return false;
     }
 
+    /*
+    * Lic7: Distance check
+    * Lic7 condition checks if the distance between two points with K_PTS intervening points inbetween is greater than the parameter LENGTH1 and returns true if it is
+    * Input: NUMPOINTS, K_PTS, LENGTH1, X, Y
+    * Returns: true or false
+    */
     public static boolean lic7() {
-        if(NUMPOINTS >= 3) {
-            for(int i = 0; i < (NUMPOINTS - 1); i++){
+        if(NUMPOINTS >= 3 && PARAMETERS.K_PTS >= 1 && PARAMETERS.K_PTS <= NUMPOINTS - 2) {
+            for(int i = 0; i < (NUMPOINTS - PARAMETERS.K_PTS - 1); i++){
                 double x1 = X[i];
                 double x2 = X[i + PARAMETERS.K_PTS + 1];
                 double y1 = Y[i];
@@ -359,8 +365,16 @@ public class Decide {
         return false;
     }
 
+    /*
+    * Lic8: Triangle inside/on circle
+    * Lic8 condition checks if the triangle formed by three points with can be contained or on a circle with the radius stored in RADIUS1
+    * method calculates the longest distance between the point to use as diameter, if triangle is acute it instead calculates the circumradius
+    * Inputs: NUMPOINTS, A_PTS, B_PTS, RADIUS1, X, Y
+    * Returns: true or false
+    */
     public static boolean lic8(){
-        if(NUMPOINTS >=5){
+        if(NUMPOINTS >=5 && PARAMETERS.A_PTS >= 1 && PARAMETERS.B_PTS >= 1 && PARAMETERS.A_PTS + PARAMETERS.B_PTS <= NUMPOINTS - 3
+        ){
             for(int i = 0; i < (NUMPOINTS - PARAMETERS.A_PTS - PARAMETERS.B_PTS - 2); i++){
                 double x1 = X[i];
                 double x2 = X[i + PARAMETERS.A_PTS + 1];
@@ -369,7 +383,6 @@ public class Decide {
                 double y2 = Y[i + PARAMETERS.A_PTS + 1];
                 double y3 = Y[i + PARAMETERS.A_PTS + PARAMETERS.B_PTS + 2];
                 
-                // FROM LIC 1
                 double distance_a = calculateDistance(x1, y1, x2, y2);
                 double distance_b = calculateDistance(x2, y2, x3, y3);
                 double distance_c = calculateDistance(x1, y1, x3, y3);
@@ -398,8 +411,13 @@ public class Decide {
         return false;
     }
 
+    /*
+    * Lic9: Angle between two points with intervening points
+    * Lic9 condition checks if three points with two intervening points, with the second point as vertex, form an angle that is larger or smaller than 180 degrees (not a straight line)
+    * Inputs: NUMPOINTS, C_PTS, D_PTS, EPSILON, X, Y
+    */
     public static boolean lic9() {
-        if(NUMPOINTS >= 5) {
+        if(NUMPOINTS >= 5 && PARAMETERS.C_PTS >= 1 && PARAMETERS.D_PTS >= 1 && PARAMETERS.C_PTS + PARAMETERS.D_PTS <= NUMPOINTS - 3) {
             for(int i = 0; i < (NUMPOINTS - PARAMETERS.C_PTS - PARAMETERS.D_PTS - 2); i++) {
                 double x1 = X[i];
                 double x2 = X[i + PARAMETERS.C_PTS + 1];
