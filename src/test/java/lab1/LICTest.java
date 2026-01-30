@@ -242,20 +242,28 @@ public class LICTest {
     }
 
     // //////////// LIC 7  ///////////
-
-    // Input test, input is less than 3, method should return false result regardless of data values
+    /*
+    * Contract: Method should return false if the input parameter NUMPOINTS is invalid (NUMPOINTS >= 3)
+    * Inputs: NUMPOINTS = 2; K_PTS = 1; LENGTH1 = 1; X = {1.0, 2.0, 3.0}; Y = {1.0, 2.0, 3.0}
+    * Output: false
+    */
     @Test
     @DisplayName("Lic 7 should be false when NUMPOINTS is less than 3")
     void testLic7InputNegative() {
         Decide.NUMPOINTS = 2;
         Decide.PARAMETERS.K_PTS = 1;
+        Decide.PARAMETERS.LENGTH1 = 1;
         Decide.X = new double[]{1.0, 2.0, 3.0};
         Decide.Y = new double[]{1.0, 2.0, 3.0};
 
         assertFalse(Decide.lic3(), "Expected Lic 7 to be false when NUMPOINTS < 3");
     }
 
-    // Negative test where inputs are valid, LENGTH1 is set to 3, distance between data points is sqrt(8) which is less than LENGTH1, method should return false
+    /*
+    * Contract: Method should return false if the distance between the data points is less than LENGTH1 (distance = sqrt(8))
+    * Inputs: NUMPOINTS = 3; K_PTS = 1; LENGTH1 = 3; X = {1.0, 2.0, 3.0}; Y = {1.0, 2.0, 3.0}
+    * Output: false
+    */
     @Test
     @DisplayName("Lic 7 should be false when distance is less than LENGTH1")
     void testLic7ValueNegative() {
@@ -268,7 +276,11 @@ public class LICTest {
         assertFalse(Decide.lic7(), "Expected Lic 7 to be false when d < LENGTH1");
     }
 
-    // Positive test, valid inputs, LENGTH1 is set to 1, distance between data points is sqrt(8) which is greater than LENGTH1, method should return true
+    /*
+    * Contract: Method should return true if the distance between the data points is greater than LENGTH1 (distance = sqrt(8))
+    * Inputs: NUMPOINTS = 3; K_PTS = 1; LENGTH1 = 1; X = {1.0, 2.0, 3.0}; Y = {1.0, 2.0, 3.0}
+    * Output: true
+    */
     @Test
     @DisplayName("Lic 7 should be true when distance is greater than LENGTH1")
     void testLic7ValuePositive() {
@@ -282,7 +294,11 @@ public class LICTest {
     }
 
     // //////////// LIC 8  ///////////
-    // Input test, input is less than 5, method should return false regardless of data values
+    /*
+    * Contract: Method should return false if the input NUMPOINTS is invalid (NUMPOINTS >= 5)
+    * Inputs: NUMPOINTS = 4; A_PTS = 1; B_PTS = 1; RADIUS1 = 1; X = {0.0, 0.0, 0.0, 0.0, 2.0}; Y = {0.0, 0.0, 2.0, 0.0, 0.0}
+    * Output: false
+    */
     @Test
     @DisplayName("Lic 8 should be false when NUMPOINTS is less than 5")
     void testLic8InputNegative() {
@@ -296,7 +312,11 @@ public class LICTest {
         assertFalse(Decide.lic8(), "Expected Lic 8 to be false for radius <= RADIUS1");
     }
 
-    // Positive test, valid inputs, RADIUS1 is set to 1, right triangle; longest side is sqrt(8), sqrt(8) divided by 2 is greater RADIUS1, method should return true
+    /*
+    * Contract: Method should return true if the triangle can fit in/on a circle with radius RADIUS1 (longest side of triangle is sqrt(8) which divided by 2 is greater than RADIUS1)
+    * Inputs: NUMPOINTS = 5; A_PTS = 1; B_PTS = 1; RADIUS1 = 1; X = {0.0, 0.0, 0.0, 0.0, 2.0}; Y = {0.0, 0.0, 2.0, 0.0, 0.0}
+    * Output: true
+    */
     @Test
     @DisplayName("Lic 8 should be true when radius is greater than RADIUS1")
     void testLic8ValuePositive() {
@@ -309,9 +329,11 @@ public class LICTest {
 
         assertTrue(Decide.lic8(), "Expected Lic 8 to be true for radius > RADIUS1");
     }
-
-    // Negative test, valid inputs, RADIUS1 is set to 2, longest side is sqrt(8), sqrt(8) divided by 2 is less than RADIUS1, method should return false
-    @Test
+    /*
+    * Contract: Method should return false if the triangle cannot fit in/on a circle with radius RADIUS1 (longest side of triangle is sqrt(8) which divided by 2 is less than RADIUS1)
+    * Inputs: NUMPOINTS = 4; A_PTS = 1; B_PTS = 1; RADIUS1 = 2; X = {0.0, 0.0, 0.0, 0.0, 2.0}; Y = {0.0, 0.0, 2.0, 0.0, 0.0}
+    * Output: false
+    */
     @DisplayName("Lic 8 should be false when radius is less than or equal to RADIUS1")
     void testLic8ValueNegative() {
         Decide.PARAMETERS.RADIUS1 = 2.0;
@@ -325,7 +347,11 @@ public class LICTest {
     }
 
     // //////////// LIC 9  ///////////
-    // Input test, input is less than 5 points, method should return false regardless of data values
+    /*
+    * Contract: Method should return false when input NUMPOINTS is invalid (NUMPOINTS >= 5)
+    * Inputs: NUMPOINTS = 4; C_PTS = 1; D_PTS = 1; EPSILON = 0.1; X = {0.0, 0.5, 1.0, 1.0, 1.0}, Y = {0.0, 0.0, 0.0, 0.5, 1.0}
+    * Output: false
+     */
     @Test
     @DisplayName("Lic 9 should be false when NUMPOINTS < 5")
     void testLic9InputNegative(){
@@ -338,7 +364,12 @@ public class LICTest {
 
         assertFalse(Decide.lic9(), "Expected Lic 9 to be false for NUMPOINTS < 5");
     }
-    // Negative test, valid inputs, points form a 180 degree angle, method should return false
+
+    /*
+    * Contract: Method should return false when angle between the points is a straight line (angle is 180 degrees)
+    * Inputs: NUMPOINTS = 5; C_PTS = 1; D_PTS = 1; EPSILON = 0.1; X = {0.0, 0.5, 1.0, 1.5, 2.0}, Y = {0.0, 0.0, 0.0, 0.0, 0.0}
+    * Output: false
+     */
     @Test
     @DisplayName("Lic 9 should be false when angle is greater than pi - epsilon, or less than pi + epsilon")
     void testLic9ValueNegative() {
@@ -352,7 +383,11 @@ public class LICTest {
         assertFalse(Decide.lic9(), "Expected Lic 9 to be false for a straight line");
     }
 
-    // Positive test, valid inputs, points form a 90 degree angle, method should return true
+    /*
+    * Contract: Method should return true when angle between the points is not a straight line (angle is 90 degrees)
+    * Inputs: NUMPOINTS = 5; C_PTS = 1; D_PTS = 1; EPSILON = 0.1; X = {0.0, 0.5, 1.0, 1.0, 1.0}, Y = {0.0, 0.0, 0.0, 0.5, 1.0}
+    * Output: true
+     */
     @Test
     @DisplayName("Lic 9 should be positive when angle is less than pi - epsilon, or greater than pi + epsilon")
     void testLic9ValuePositive(){
